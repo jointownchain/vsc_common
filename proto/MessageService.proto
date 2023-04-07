@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package MessageService;
+option go_package = "service/MessageService;MessageService";
+
+import public "google/protobuf/timestamp.proto";
+
+message Page {
+  int64 pageNumber = 1;
+  int64 pageSize = 2;
+}
+
+message SendEmailsReq {
+  string subject = 1;
+  string content = 2;
+  //平台可选发送邮件账户，message配置时已经存在
+  string sender = 3;
+  bool isHtml = 4;
+  repeated string toEmails = 5;
+  repeated string ccEmails = 6;
+}
+
+message SendCustomMessageReq{
+  string title = 1;
+  string content = 2;
+  //平台可选发送邮件账户，message配置时已经存在
+  string infoType = 3;
+  //发送操作人，不填为平台自主发送
+  int64 managerId = 4;
+  //指定接收组织机构id（如果操作的messagePermission处理不支持此项则此参数无效）
+  repeated int64 toOrganizationIds = 5;
+  //指定接收人id（如果操作的messagePermission处理不支持此项则此参数无效）
+  repeated int64 toUserIds = 6;
+}
+
+message SendCustomMessageResp{
+  int64 num = 1;
+}
+
+message SendMessageReq {
+  //该推送的业务权限类别- 此项决定如何将参数处理为推送结构
+  string messagePermission = 1;
+  //产生此业务推送的源头信息，根据permission不同连接对象不同
+  int64 linkId = 2;
+  string linkCode = 3;
+  string extends = 4;
+}
+
+message SendSmsReq {
+  //短信模板编码
+  string templateCode = 1;
+  //模板参数替换
+  map<string, string> param = 2;
+  //短信标题
+  string subject = 3;
+  //如果非模板，使用此内容发送
+  string content = 4;
+  //收信手机号
+  repeated string toPhones = 5;
+}
+message GetMessageRecordsReq {
+  google.protobuf.Timestamp startAt = 1;
+  google.protobuf.Timestamp endAt = 2;
+  string infoType = 3;
+  string businessKey = 4;
+  string readStatus = 5;
+  Page page = 6;
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 7;
+  int64 linkId = 8;
+  string linkCode = 9;
+  string messagePermission = 10;
+}
+message GetMessageBusinessReq {
+  Page page = 1;
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 2;
+}
+message ConsumeMessageReq {
+  repeated int64 messageIds = 1;
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 2;
+}
+message SendMessageResp {
+  int64 num = 1;
+}
+
+message SendEmailsResp {
+
+}
+
+message SendSmsResp {
+}
+
+message Message {
+  string title = 1;
+  string content = 2;
+  string infoType = 3;
+  string businessKey = 4;
+  string businessName = 5;
+  int64 linkId = 6;
+  string linkCode = 7;
+  google.protobuf.Timestamp readAt = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  string readStatus = 10;
+  int64  messageId = 11;
+  int64  toUserId = 12;
+  int64  toUsername = 13;
+}
+message MessageListResp {
+  repeated Message list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message MessageBusiness {
+  string businessKey = 1;
+  string businessName = 2;
+}
+message MessageBusinessResp {
+  repeated MessageBusiness list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message ConsumeMessageResp {
+}
+message GetUnreadCountReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+}
+
+message UnreadCountResp {
+  int64 infoCount = 1;
+  int64 errorCount = 2;
+}
+
+message DeleteMsgReq {
+  int64 managerId = 1;
+  repeated int64 msgIds = 2;
+  google.protobuf.Timestamp start = 3;
+  google.protobuf.Timestamp end = 4;
+  string readStatus = 5;
+}
+
+message DeleteMsgResp {
+  int64 result = 1;
+}
+
+service MessageService {
+  //平台消息发送
+  rpc SendEmails(SendEmailsReq) returns (SendEmailsResp);
+  rpc SendSms(SendSmsReq) returns (SendSmsResp);
+  //发送permission消息
+  rpc SendPermissionMessage(SendMessageReq) returns (SendMessageResp);
+  //自定义消息发送
+  rpc SendCustomMessage(SendCustomMessageReq) returns (SendCustomMessageResp);
+  //平台消息管理
+  rpc GetMessageRecords(GetMessageRecordsReq) returns (MessageListResp);
+  rpc GetMessageBusiness(GetMessageBusinessReq) returns (MessageBusinessResp);
+  rpc ConsumeMessage(ConsumeMessageReq) returns (ConsumeMessageResp);
+  rpc UnreadCount(GetUnreadCountReq) returns (UnreadCountResp);
+  //消息删除
+  rpc DeleteMsg(DeleteMsgReq) returns (DeleteMsgResp);
+}

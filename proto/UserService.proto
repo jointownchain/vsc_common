@@ -1,0 +1,403 @@
+syntax = "proto3";
+
+package UserService;
+option go_package = "service/UserService;UserService";
+
+import public "google/protobuf/timestamp.proto";
+
+message Page {
+  int64 pageNumber = 1;
+  int64 pageSize = 2;
+}
+
+message UserPassLoginReq {
+  string password = 1;
+  string username = 2;
+  string platFormType = 3;
+}
+
+message OauthTokenReq {
+  string clientId = 1;
+  string clientSecret = 2;
+  string grantType = 3;
+  string refreshToken = 4;
+  string organizationType = 5;
+}
+message OauthTokenResp {
+  string accessToken = 1;
+  string tokenType = 2;
+  int64 expiresIn = 3;
+  string refreshToken = 4;
+  string organizationCode = 5;
+  int64 organizationId = 6;
+  string organizationType = 7;
+  repeated PermissionInfo permissions = 8;
+}
+message UserPassLoginResp {
+  int64 userId = 1;
+  string username = 2;
+  string nickname = 3;
+  string email = 4;
+  string role = 5;
+  int64 organizationId = 6;
+  repeated PermissionInfo permissions = 7;
+  string activeStatus = 8;
+  string roleName = 9;
+  int64 agreementVersion = 10;
+  google.protobuf.Timestamp agreementAt = 11;
+}
+
+message PermissionInfo {
+  string permission = 1;
+  string permissionUrl = 2;
+}
+
+message CreateUserReq {
+  string username = 1;
+  string userPhone = 2;
+  string password = 3;
+  string role = 4;
+  string nickname = 5;
+  int64 organizationId = 6;
+  string accountStatus = 7;
+  int64 managerId = 8;
+  string email = 9;
+}
+
+message CreateUserResp {
+  int64 userId = 1;
+}
+
+message UpdateUserReq {
+  int64 userId = 1;
+  string userPhone = 2;
+  string password = 3;
+  string role = 4;
+  string nickname = 5;
+  string accountStatus = 6;
+  int64 managerId = 7;
+  string email = 8;
+  string activeStatus = 9;
+  int64 agreementVersion = 10;
+}
+
+message UpdateUserResp {
+  string platFormType = 1;
+}
+
+message ListUserReq {
+  int64 roleId = 1;
+  string nickname = 2;
+  string hospitalName = 3;
+  string companyName = 4;
+  int64 organizationId = 5;
+  string platFormType = 6;
+  int64 managerId = 7;
+  Page page = 8;
+  string email = 9;
+  string username = 10;
+  string accountStatus = 11;
+  string activeStatus = 12;
+  string userPhone = 13;
+}
+
+message ListUserResp {
+  repeated UserDetail list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message UserDetail {
+  int64 userId = 1;
+  string username = 2;
+  string role = 3;
+  string platFormType = 4;
+  string userPhone = 5;
+  string nickname = 6;
+  int64 organizationId = 7;
+  string organizationName = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  string email = 10;
+  string roleName = 11;
+  string activeStatus = 12;
+  string accountStatus = 13;
+}
+
+message ListRoleReq {
+  Page page = 1;
+  string platFormType = 2;
+}
+
+message ListRoleResp {
+  repeated RoleDetail list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message RoleDetail {
+  int64 roleId = 1;
+  string role = 2;
+  string roleName = 3;
+  string platFormType = 4;
+  string roleStatus = 5;
+  google.protobuf.Timestamp createdAt = 6;
+}
+
+message DeleteUserReq {
+  int64 userId = 1;
+  int64 managerId = 2;
+}
+
+message DeleteUserResp {
+  int64 userId = 1;
+}
+
+message UserInfoReq {
+  int64 userId = 1;
+  int64 managerId = 2;
+}
+
+message CreateOauthAccountReq {
+  int64 organizationId = 1;
+  string organizationType = 2;
+  int64 mibId = 3;
+  int64 managerId = 4;
+}
+message CreateOauthAccountResp {
+  string clientId = 1;
+  string clientSecret = 2;
+}
+message ResetOauthAccountReq {
+  string clientId = 1;
+  int64 organizationId = 2;
+  int64 mibId = 3;
+  int64 managerId = 4;
+  string organizationType = 5;
+}
+message GetOauthAccountReq {
+  int64 organizationId = 1;
+  string organizationType = 2;
+  int64 mibId = 3;
+  int64 managerId = 4;
+  //也可以直接指定clientId
+  string clientId = 5;
+}
+
+message GetOauthAccountResp {
+  string accessToken = 1;
+  string tokenType = 2;
+  int64 expiresIn = 3;
+  string refreshToken = 4;
+  string organizationCode = 5;
+  int64 organizationId = 6;
+  repeated PermissionInfo permissions = 7;
+  string organizationType = 8;
+  int64 mibId = 9;
+  string clientId = 10;
+  google.protobuf.Timestamp tokenExpire = 11;
+  google.protobuf.Timestamp refreshTokenExpire = 12;
+}
+message GetOauthTokenReq {
+  string clientId = 1;
+  string accessToken = 2;
+  string organizationType = 3;
+}
+
+message BindOauthPermissionReq {
+  int64 organizationId = 1;
+  string organizationType = 2;
+  int64 mibId = 3;
+  int64 managerId = 4;
+  repeated string permissions = 5;
+}
+
+message GetRolesReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  string role = 3;
+  //注意 ALL为全平台角色，必定返回
+  string platFormType = 4;
+  //ENABLE DISABLE 不填写则不限制
+  string roleStatus = 5;
+  Page   page = 6;
+}
+
+message RoleDTO {
+  int64 mibId = 1;
+  string role = 2;
+  string roleName = 3;
+  //注意 ALL为全平台角色，必定返回
+  string platFormType = 4;
+  //ENABLE DISABLE 不填写则不限制
+  string roleStatus = 5;
+  google.protobuf.Timestamp createdAt = 6;
+}
+message GetRolesResp {
+  repeated RoleDTO list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetPermissionsReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  //查询某个角色拥有的权限
+  string role = 3;
+  //注意 ALL为全平台权限，必定返回
+  string platFormType = 4;
+  //权限类别 WEB 页面权限 API 功能权限
+  string permissionType = 5;
+  //可以指定权限的父权限，只对层级权限有效
+  int64 parentId = 6;
+  //可以指定获取哪一层级的权限，只对层级权限有效
+  int64 layer = 7;
+  Page   page = 8;
+}
+
+message PermissionDTO {
+  string permission = 1;
+  string permissionUrl = 2;
+  string permissionDescription = 3;
+  int64 parentId = 4;
+  int64 layer = 5;
+  //注意 ALL为全平台权限，必定即便指定了platFormType也会返回
+  string platFormType = 6;
+  //权限类别 WEB 页面权限 API 功能权限
+  string permissionType = 7;
+  google.protobuf.Timestamp createdAt = 8;
+  int64 permissionId = 9;
+}
+message GetPermissionsResp {
+  repeated PermissionDTO list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message CreateRoleReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  //角色key，不能重复
+  string role = 3;
+  string roleName = 4;
+  string roleStatus = 5;
+  //注意 ALL为全平台权限，必定返回
+  string platFormType = 6;
+  //涉及的权限（注意，权限必须与角色的platFormType一致（ALL的也可以））
+  repeated string permissions = 7;
+}
+
+message CreateRoleResp {
+  int64 roleId = 1;
+  string role = 2;
+}
+
+message UpdateRoleReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  //需要变更的角色名
+  string role = 3;
+  string roleName = 4;
+  string roleStatus = 5;
+  //涉及的权限（注意，权限必须与角色原来的platFormType一致（ALL的也可以））
+  repeated string permissions = 6;
+}
+
+message UpdateRoleResp {
+
+}
+message DeleteRoleReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  //需要删除的角色名（软删除）
+  string role = 3;
+}
+
+message DeleteRoleResp {
+
+}
+
+
+
+
+service UserService {
+  rpc PassLogin(UserPassLoginReq) returns (UserPassLoginResp);
+  rpc OauthToken(OauthTokenReq) returns (OauthTokenResp);
+  rpc GetOauthToken(GetOauthTokenReq) returns (OauthTokenResp);
+  rpc CreateOauthAccount(CreateOauthAccountReq) returns (CreateOauthAccountResp);
+  //重置oauth 的secret
+  rpc ResetOauthAccountSecret(ResetOauthAccountReq) returns (CreateOauthAccountResp);
+  //获取某个指定平台组织的oauth账号信息
+  rpc GetOauthAccount(GetOauthAccountReq) returns (GetOauthAccountResp);
+  rpc BindOauthPermission(BindOauthPermissionReq) returns (OauthTokenResp);
+
+  rpc CreateUser(CreateUserReq) returns (CreateUserResp);
+  rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp);
+  rpc ListUser(ListUserReq) returns (ListUserResp);
+  rpc ListRole(ListRoleReq) returns (ListRoleResp);
+  rpc DeleteUser(DeleteUserReq) returns (DeleteUserResp);
+  rpc UserInfo(UserInfoReq) returns (UserDetail);
+}
+
+// 角色权限管理相关
+service RoleService {
+  //各平台角色查询
+  rpc GetRoles(GetRolesReq) returns (GetRolesResp);
+  //平台权限列表查询
+  rpc GetPermissions(GetPermissionsReq) returns (GetPermissionsResp);
+  //创建角色
+  rpc CreateRole(CreateRoleReq) returns (CreateRoleResp);
+  //修改角色信息（含权限）
+  rpc UpdateRole(UpdateRoleReq) returns (UpdateRoleResp);
+  //删除角色(需要把已经使用此权限的账户角色做变更,否则提示不可变更)
+  rpc DeleteRole(DeleteRoleReq) returns (DeleteRoleResp);
+}
+
+message ListAgreementReq {
+  int64 mibId = 1;
+  int64 managerId = 2;
+  string role = 3;
+  //注意 ALL为全平台角色，必定返回
+  string platFormType = 4;
+  string miName = 5;
+  string comName = 6;
+  string userName = 7;
+  Page   page = 8;
+}
+
+message AgreementResp {
+  int64 userId = 1;
+  string username = 2;
+  string nickname = 3;
+  string roleName = 4;
+  string miName = 5;
+  string comName = 6;
+  google.protobuf.Timestamp agreementAt = 7;
+  string agreementVersion = 8;
+}
+
+message ListAgreementResp {
+  repeated AgreementResp list = 1;
+  int64 total = 2;
+  Page page = 3;
+}
+
+message GetAgreementReq {
+  string agreementVersion = 1;
+}
+
+message AgreementContent {
+  string agreementContent = 1;
+}
+
+
+// 用户协议 相关
+service AgreementService {
+  // list
+  rpc ListAgreement(ListAgreementReq) returns (ListAgreementResp);
+}
+
+

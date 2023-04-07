@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package ChainService;
+option go_package = "service/ChainService;ChainService";
+import public "google/protobuf/timestamp.proto";
+
+
+message GetHashContentReq {
+  int64 managerId = 1;
+  string hash = 2;
+  //目前支持的hash类型  COM CONFIG CONTRACT CONTRACT_MI FACTORING MEDICINE MI PAY SHIPMENT FACTORINGAGREEREF
+  string businessType = 3;
+}
+
+message GetHashContentResp {
+  //证书内容结构，json
+  string data = 1;
+  //向上追溯用的hash
+  string lastHash = 2;
+  string uploadNode = 3;
+  string uploaderName = 4;
+  string uploaderRole = 5;
+  string uploaderRoleName = 6;
+  string uploaderAccount = 7;
+  string currentHash = 8;
+  // 上链成功时间
+  google.protobuf.Timestamp uploadSuccessAt = 9;
+  // 证书描述
+  string description = 10;
+}
+
+message GetDecryptContentReq {
+  int64 managerId = 1;
+  string ecryptContent = 2;
+}
+
+message GetDecryptContentResp {
+  string data = 1;
+}
+
+service ChainService {
+  //根据哈希查询证书内容
+  rpc GetHashContent(GetHashContentReq) returns (GetHashContentResp);
+  rpc GetDecryptContent(GetDecryptContentReq) returns (GetDecryptContentResp);
+}
+
+

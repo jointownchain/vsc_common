@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+vendor/
+target/
+config.cc.toml
+./main.go
+proto/google

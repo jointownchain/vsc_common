@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package ReturnService;
+option go_package = "service/ReturnService;ReturnService";
+
+import public "google/protobuf/timestamp.proto";
+
+
+// ￣へ￣ 退单 start ======================================================
+
+// 创建退货申请
+message CreateReturnReq {
+  string shipmentNo = 1;
+  int64 miOrgId = 2; // 企业orgID
+  int64 managerUserId = 3; // 用户id
+  string orderNo = 4;
+  int64 returnAmount = 5;
+  string returnProof = 6;
+  string returnReason = 7;
+  int64 miId = 8; // 医院ID
+}
+
+message Page {
+  int64 pageNumber = 1;
+  int64 pageSize = 2;
+}
+
+
+// 退货单筛选列表-请求
+message ListReturnReq {
+  Page page = 1;
+  google.protobuf.Timestamp startDate = 2; // 订单收货时间
+  google.protobuf.Timestamp endDate = 3;
+  string returnApplyStatus = 4; //  退货申请状态
+  string returnDeliveryStatus = 5; // 退货物流状态
+  string returnNo = 6; // 退单号
+  string orderNo = 7; // 订单号
+  string zcNo = 8; // 招采单号
+  string medicineName = 9; // 药品通用名
+  string deliveryCompany = 10; // 配送企业
+  string deliveryNo = 11; // 配送单号
+  string medicalCompany = 12; // 医疗机构
+  int64 miId = 13; // 医院ID
+  int64 comId = 14; // 企业ID
+  int64 managerUserId = 15; // 用户id
+  string medicineCode = 16; // 药品code
+  google.protobuf.Timestamp applyStartDate = 17; // 退货单创建时间
+  google.protobuf.Timestamp applyEndDate = 18;
+  string zcFrom = 19; // 招采来源 ： 省、市
+}
+
+
+// 退货单筛选后返回
+message ListReturnRsp {
+  repeated ReturnOrder list = 1;
+  int64 total = 2;
+  Page page = 3;
+  int64 waitForApply = 4; // 总-待审批数量
+  int64 waitForConfirm = 5; // 总-待确认收货数量
+}
+
+
+// 单个退货单显示信息
+message ReturnOrder {
+  string returnNo = 1;
+  string orderNo = 2;
+  string zcNo = 3;
+  string deliveryNo = 4;
+  string deliveryCompany = 5; // 配送企业
+  string medicalCompany = 6; // 医院
+  string medicineName = 7;
+  string medicineCode = 8;
+  int64 contractMiId = 9; // 招采子合同id
+  string medicineSpecification = 10; // 药品规格
+  int64 medicinePrice = 11; // 药品单价
+  int64 orderAmount = 12; // 订单数量
+  int64 returnAmount = 13; // 退回数量
+  int64 returnMoney = 14; // 退货总金额
+  string returnApplyStatus = 15; // 退货申请状态
+  string returnDeliveryStatus = 16; // 退货状态
+  google.protobuf.Timestamp returnDeadline = 17; // 退货最终时间
+  google.protobuf.Timestamp returnFinishDate = 18; // 退货完成时间
+  google.protobuf.Timestamp returnApplyDate = 19; // 退货申请时间
+  string returnProofURL = 20; // 退货凭证URL
+  string returnReason = 21; // 退货原因
+  int64 returnApplyAmount = 22; // 申请中的退货数量
+  int64 returnApplyAmountByOrder = 23; // 以 orderID 为单位的 申请中的退货数量， 用来辅助判断是否能够重新发起退货
+  google.protobuf.Timestamp receivedAt = 24; // 确权时间
+}
+
+// 可退货订单列表-请求
+message ListReturnableReq {
+  Page page = 1;
+  google.protobuf.Timestamp startDate = 2; // 订单收货时间筛选
+  google.protobuf.Timestamp endDate = 3;
+  string returnApplyStatus = 4; //  退货申请状态
+  string returnDeliveryStatus = 5; // 退货物流状态
+  string orderNo = 6; // 订单号
+  string zcNo = 7; // 招采单号
+  string medicineName = 8; // 药品通用名
+  string deliveryCompany = 9; // 配送企业
+  string deliveryNo = 10; // 配送单号
+  string zcFrom = 11; // 招采来源 ： 省、市
+  int64 miId = 12; // 医院ID
+  int64 comId = 13; // 企业ID
+  int64 managerUserId = 14; // 用户id
+  string medicineCode = 15; // 药品code
+}
+
+// 可退货订单列表返回
+message ListReturnableRsp {
+  repeated ReturnableOrder list = 1;
+  int64 total = 2;
+  Page page = 3;
+}
+
+// 可退货订单单条信息
+message ReturnableOrder {
+  string zcFrom = 1; // 招采来源 ： 省、市
+  string orderNo = 2;
+  string zcNo = 3;
+  string deliveryNo = 4;
+  string deliveryCompany = 5;
+  string medicineName = 6;
+  string medicineCode = 7;
+  string medicineSpecification = 8; // 药品规格
+  int64 medicinePrice = 9;
+  int64 orderAmount = 10; // 订单数量-采购量
+  int64 returnAmount = 11; // 退回数量
+  int64 returnMoney = 12; // 退货总金额
+  string returnApplyStatus = 13; // 退货申请状态
+  string returnDeliveryStatus = 14; // 退货状态
+  google.protobuf.Timestamp returnDeadline = 15; // 退货最终时间
+  google.protobuf.Timestamp receiveDate = 17; // 订单收货时间
+  int64 orderMoney = 18; // 订单总价
+  //  string medicineTag = 19; // 药品批次
+  string medicineForm = 20; // 药品剂型
+  string medicineUnit = 21; // 药品单位
+  int64 calculateRate = 22; // 药品系数
+  string miName = 23; // 医疗机构名称
+  string medicineManufacturer = 24; // 药品生产企业
+  google.protobuf.Timestamp returnFinishDate = 25; // 退货完成时间
+  int64 contractMiID = 26; // 子合同ID 用于查询 合同编码、药品批次
+  int64 medicineID = 27;
+  int64 returnApplyAmount = 28; // 申请中的退货数量
+  google.protobuf.Timestamp receivedAt = 29; // 确权时间
+}
+
+
+// 退货申请批复
+message UpdateReturnStatusReq {
+  string returnNo = 1;
+  string applyStatus = 2; // 申请状态, APPLYING AGREE DISAGREE
+  string returnStatus = 3; // 退货状态, WAITING 待退 RETURNING 退货中 SUCCESS FAIL
+  int64 miId = 4; // 医院ID
+  int64 comId = 5; // 企业ID
+  int64 managerUserId = 6; // 用户id
+}
+
+service ReturnService {
+  // 发起退货申请
+  rpc CreateReturnOrder(CreateReturnReq) returns (StandardRes);
+  // 列表 退货单
+  rpc ListReturnOrder(ListReturnReq) returns (ListReturnRsp);
+  // 列表 可退货的 订单
+  rpc ListReturnableOrder(ListReturnableReq) returns (ListReturnableRsp);
+  // 退货申请批复  // 收到退货
+  rpc UpdateReturnStatus(UpdateReturnStatusReq) returns (StandardRes);
+}
+
+
+// ￣へ￣ 退单 end ======================================================
+
+message StandardRes {
+  string code = 1;
+  string msg = 2;
+}

@@ -1,0 +1,3316 @@
+syntax = "proto3";
+
+package ManagerService;
+option go_package = "service/ManagerService;ManagerService";
+
+import public "google/protobuf/timestamp.proto";
+import public "google/protobuf/any.proto";
+
+message Page {
+  int64 pageNumber = 1;
+  int64 pageSize = 2;
+}
+
+
+//根据招采单号查询合同信息
+message GetContractInfoReq {
+  int64  shipmentPlanId = 1;
+  int64 managerId = 2;
+}
+
+message GetContractInfoResp {
+  int64  contractId = 1;
+  string  contractNo = 2;
+}
+
+//查询当前合同汇总
+message CountContractReq {
+  int64  mibId = 1;
+  int64 managerId = 2;
+}
+
+message CountContractResp {
+  int64  countContract = 1;
+  int64  countMoney = 2;
+}
+
+//合同详情
+message ContractDetailReq {
+  int64 contractId = 1;
+  int64 managerId = 2;
+
+}
+
+message ContractDetailResp {
+  repeated ContractDetailVo list = 1;
+}
+
+message ContractDetailVo {
+  string  manufacturer = 1;
+  string  miName = 2;
+  string  medicineAmount = 3;
+  string  allMoney = 4;
+  string  medicineReceive = 5;
+}
+
+//合同列表
+message ContractListReq {
+  string  medicineName = 1;
+  string  TenderCompany = 2;
+  google.protobuf.Timestamp  StartAt = 3;
+  google.protobuf.Timestamp   EndAt = 4;
+  string  companyName = 5;
+  int64  tagId = 6;
+  string  contractNo = 7;
+  string  contractStatus = 8;
+  Page page = 9;
+  int64 managerId = 10;
+  string  medicineCode = 11;
+  //备用
+  string companyCode = 12;
+  int64  companyId = 13;
+  int64  miId = 14;
+  string  activeStatus = 15;
+}
+
+message ContractListResp {
+  repeated ContractListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ContractListVo {
+  int64   contractId = 1;
+  string  contractNo = 2;
+  string  medicineName = 3;
+  string  medicineCode = 4;
+  string  tagName = 5;
+  string  medicineSpecification = 6;
+  string  tenderCompany = 7;
+  string  companyName = 8;
+  int64  medicinePrice = 9;
+  int64  totalAmount = 10;
+  int64  totalMoney = 11;
+  google.protobuf.Timestamp startAt = 12;
+  google.protobuf.Timestamp endAt = 13;
+  google.protobuf.Timestamp createdAt = 14;
+  string hashInfo = 15;
+  string activeStatus = 16;
+  int64  medicineId = 17;
+  int64  companyId = 18;
+  int64  contractMiAmount = 19;
+  int64  contractMiReceive = 20;
+  string  manufacturer = 21;
+  string  medicineForm = 22;
+  string  medicinePackage = 23;
+  string  medicineUnit = 24;
+  int64  calculateRate = 25;
+  int64 contractMiId = 26;
+}
+//根据药品id 配送企业id 起始时间 查询合同列表
+message UpCheckContractReq {
+  repeated  CheckContractParam reqs = 1;
+  int64 managerId = 2;
+}
+
+message CheckContractParam {
+  int64  medicineId = 1;
+  int64  companyId = 2;
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+}
+
+message CheckContractListResp {
+  repeated ContractListVo list = 1;
+}
+
+//子合同列表
+message ContractMiListReq {
+  int64  contractId = 1;
+  int64  contractMiId = 2;
+  int64 managerId = 4;
+}
+
+message ContractMiListResp {
+  repeated ContractMiListVo list = 1;
+}
+
+message ContractMiListVo {
+  int64   miContractId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  miName = 4;
+  int64  medicinePrice = 5;
+  int64  medicineAmount = 6;
+  int64  medicineAmountMoney = 7;
+  string  hashInfo = 8;
+  google.protobuf.Timestamp infoUploadAt = 9;
+  string  medicineSpecification = 10;
+  string  contractMd5 = 11;
+  string  contractUrl = 12;
+  string  activeStatus = 13;
+  string  manufacturer = 14;
+  int64  medicineReceive = 15;
+  int64  miId = 16;
+  google.protobuf.Timestamp createAt = 17;
+}
+//子合同补录
+message CreateOneContractMIReq {
+  int64  miId = 1;
+  int64  contractId = 2;
+  int64  medicineAmount = 3;
+  int64 managerId = 4;
+}
+
+message CreateOneContractMIResp {
+  int64  result = 1;
+}
+//子合同更新
+message UpdateOneContractMIReq {
+  int64  contractMiId = 1;
+  int64  miId = 2;
+  int64  medicineAmount = 3;
+  int64 managerId = 4;
+}
+
+message UpdateOneContractMIResp {
+  int64  result = 1;
+}
+//主合同更新
+message UpdateOneContractReq {
+  int64  contractId = 1;
+  int64  medicineId = 2;
+  int64  medicinePrice = 3;
+  google.protobuf.Timestamp startAt = 4;
+  google.protobuf.Timestamp endAt = 5;
+  int64 managerId = 6;
+  int64 companyId = 7;
+  string tenderCompany = 8;
+}
+
+message UpdateOneContractResp {
+  int64  result = 1;
+}
+//主合同批量更新和新增
+message BatchOperateContractReq {
+  repeated BatchOperateContract updateParam = 1;
+  repeated BatchOperateContract createParam = 2;
+  int64 managerId = 3;
+}
+
+message BatchOperateContractResp {
+  int64  result = 1;
+}
+
+message BatchOperateContract {
+  int64  contractId = 1;
+  int64  medicineId = 2;
+  int64  medicinePrice = 3;
+  google.protobuf.Timestamp startAt = 4;
+  google.protobuf.Timestamp endAt = 5;
+  int64 managerId = 6;
+  int64 companyId = 7;
+  string tenderCompany = 8;
+}
+
+//主合同更新状态
+message UpdateContractActiveReq {
+  int64  contractId = 1;
+  string  activeStatus = 2;
+  int64 managerId = 6;
+}
+
+message UpdateContractActiveResp {
+  int64  result = 1;
+}
+//刷新合同
+message RefreshContractReq {
+  int64  contractId = 1;
+  string  contractNo = 2;
+  int64 managerId = 3;
+}
+
+message RefreshContractResp {
+  int64  result = 1;
+}
+//删除主合同
+message DeleteOneContractReq {
+  int64  contractId = 1;
+  int64 managerId = 2;
+}
+
+message DeleteOneContractResp {
+  int64  result = 1;
+}
+//删除子合同
+message DeleteOneContractMiReq {
+  int64  contractMiId = 1;
+  int64 managerId = 2;
+}
+
+message DeleteOneContractMiResp {
+  int64  result = 1;
+}
+//药品列表
+message MedicineListReq {
+  string  medicineName = 1;
+  string  medicineCode = 2;
+  int64  tagId = 3;
+  string  manufacturer = 4;
+  Page page = 5;
+  int64 managerId = 6;
+}
+
+message MedicineListResp {
+  repeated MedicineListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message MedicineListVo {
+  int64   medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  medicineSpecification = 4;
+  string  medicineForm = 5;
+  string  medicinePackage = 6;
+  int64  calculateRate = 7;
+  string  manufacturer = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  string  medicineUnit = 10;
+  string hashInfo = 11;
+  string tagName = 12;
+  string activeStatus = 13;
+}
+//药品列表用于查询 通用接口
+message MedicineListForQueryReq {
+  string  medicineName = 1;
+  string  medicineCode = 2;
+  int64 managerId = 3;
+  Page page = 4;
+  string activeStatus = 5;
+}
+
+message MedicineListForQueryResp {
+  repeated MedicineListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message MedicineListForQueryVo {
+  int64   medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+}
+
+//创建药品
+message CreateMedicineReq {
+  string  medicineName = 1;
+  string  medicineCode = 2;
+  string  medicineSpecification = 3;
+  string  medicineForm = 4;
+  string  medicinePackage = 5;
+  int64  calculateRate = 6;
+  string  manufacturer = 7;
+  string  medicineUnit = 8;
+  int64 managerId = 9;
+}
+message CreateMedicineResp {
+  int64  result = 1;
+}
+
+//批量创建药品
+message CreateBatchMedicineReq {
+  repeated CreateMedicineReq list = 1;
+  int64 managerId = 9;
+}
+message CreateBatchMedicineResp {
+  int64  result = 1;
+}
+
+//编辑药品
+message UpdateMedicineReq {
+  int64  medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  medicineSpecification = 4;
+  string  medicineForm = 5;
+  string  medicinePackage = 6;
+  int64  calculateRate = 7;
+  string  manufacturer = 8;
+  string  medicineUnit = 9;
+  int64 managerId = 10;
+}
+message UpdateMedicineResp {
+  int64  result = 1;
+}
+//编辑药品生效状态
+message UpdateMedicineActiveReq {
+  int64  medicineId = 1;
+  string activeStatus = 2;
+  int64 managerId = 3;
+}
+message UpdateMedicineActiveResp {
+  int64  Result = 1;
+}
+//删除药品
+message DeleteMedicineReq {
+  string  medicineCode = 1;
+  int64 managerId = 2;
+}
+message DeleteMedicineResp {
+  int64 Result = 1;
+}
+//根据药品id查询tagName字符串组
+message SelectTagByMedicineIdReq {
+  int64  medicineId = 1;
+  int64 managerId = 2;
+}
+message SelectTagByMedicineIdResp {
+  string tagNames = 1;
+}
+
+//根据药品names查询药品列表信息
+message SelectInfoByMedicineNamesReq {
+  repeated string  medicineNames = 1;
+  int64 managerId = 2;
+}
+message SelectInfoByMedicineNamesResp {
+  repeated MedicineListForQueryVo list = 1;
+}
+
+
+//查询标签列表
+message TagListReq {
+  string  tagType = 1;
+  int64 managerId = 2;
+  string tagName = 3;
+  Page page = 4;
+}
+message TagListResp {
+  repeated TagListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message TagListVo {
+  int64 tagId = 1;
+  string tagName = 2;
+  string tagType = 3;
+}
+//创建标签
+message CreateTagReq {
+  string  tagType = 1;
+  string  tagName = 2;
+  int64 managerId = 3;
+}
+message CreateTagResp {
+  int64 result = 1;
+}
+//编辑标签
+message UpdateTagReq {
+  int64 tagId = 1;
+  string  tagName = 2;
+  int64 managerId = 3;
+}
+message UpdateTagResp {
+  int64 result = 1;
+}
+//删除标签
+message DeleteTagReq {
+  int64 tagId = 1;
+  int64 managerId = 2;
+}
+message DeleteTagResp {
+
+}
+
+//查询标签详情列表
+message TagDetailListReq {
+  int64  tagId = 1;
+  int64 managerId = 2;
+  Page page = 3;
+}
+
+message TagDetailListResp {
+  repeated TagDetailVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message TagDetailVo {
+  int64   medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  medicineUnit = 4;
+  string  medicineForm = 5;
+  string  medicineSpecification = 6;
+  string  manufacturer = 7;
+}
+
+// 删除标签药品信息
+message DeleteTagMedicineReq {
+  int64  tagId = 1;
+  int64  medicineId = 2;
+  int64 managerId = 3;
+}
+
+message DeleteTagMedicineResp {
+  int64 result = 1;
+}
+//创建药品标签信息
+message CreateTagMedicineReq {
+  int64  tagId = 1;
+  int64  medicineId = 2;
+  int64 managerId = 3;
+}
+
+message CreateTagMedicineResp {
+  int64 result = 1;
+}
+
+//查询药品列表信息（标签使用）
+message CommonMedicineQueryReq {
+  string  medicineCode = 1;
+  string  medicineName = 2;
+  int64  tagId = 3;
+  int64 managerId = 4;
+  string  medicineUnit = 5;
+  string  medicineForm = 6;
+  string  medicineSpecification = 7;
+  string  manufacturer = 8;
+}
+
+message CommonMedicineQueryResp {
+  repeated TagMedicineVo list = 1;
+}
+
+message TagMedicineVo {
+  int64   medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  medicineUnit = 4;
+  string  medicineForm = 5;
+  string  medicineSpecification = 6;
+  string  manufacturer = 7;
+}
+
+//医疗机构列表
+message ListMiReq {
+  string  miCode = 1;
+  string  miName = 2;
+  string  validStatus = 3;
+  Page page = 4;
+  int64 managerId = 5;
+  repeated int64 miIds = 6;
+}
+
+message ListMiResp {
+  repeated ListMiVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListMiVo {
+  int64   miId = 1;
+  string  miCode = 2;
+  string  miName = 3;
+  string  miType = 4;
+  string  managerName = 5;
+  string  managerPhone = 6;
+  string  province = 7;
+  string  city = 8;
+  string  zone = 9;
+  string  hashInfo = 10;
+  google.protobuf.Timestamp  createdAt = 11;
+  string logoUrl = 12;
+  string areaCode = 13;
+  string areaName = 14;
+}
+//查询医疗机构 通用接口
+message CommonMIReq {
+  string  miName = 1;
+  string  miCode = 2;
+  int64 managerId = 3;
+  Page page = 4;
+  string activeStatus = 5;
+  int64 miId = 6;
+}
+
+message CommonMIResp {
+  repeated CommonMIVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message CommonMIVo {
+  int64   miId = 1;
+  string  miName = 2;
+  string  miCode = 3;
+  string  logoUrl = 4;
+}
+//创建医疗机构信息(主体信息)
+message CreateOneMIReq {
+  string  miName = 1;
+  string  miCode = 2;
+  string miType = 3;
+  string managerName = 4;
+  string managerPhone = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+  int64   managerId = 9;
+  string areaCode = 10;
+
+}
+
+message CreateOneMIResp {
+  int64 result = 1;
+}
+
+//更新医疗机构信息
+message UpdateMiReq {
+  int64  miId = 1;
+  string miName = 2;
+  string miType = 3;
+  string managerName = 4;
+  string managerPhone = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+  int64  managerId = 9;
+  string logoUrl = 10;
+  string areaCode = 11;
+}
+
+message UpdateMiResp {
+  int64 result = 1;
+}
+//配送企业通用查询
+message CommonCompanyReq {
+  string  companyName = 1;
+  string  companyCode = 2;
+  int64 managerId = 3;
+  Page page = 4;
+  string activeStatus = 5;
+  int64 comId = 6;
+}
+
+message CommonCompanyResp {
+  repeated CommonCompanyVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message CommonCompanyVo {
+  int64 companyId = 1;
+  string companyName = 2;
+  string companyCode = 3;
+  string logoUrl = 4;
+}
+
+//配送企业列表根据name查询
+message SelCompanyByNamesReq {
+  repeated string companyNames = 1;
+  int64 managerId = 2;
+}
+
+message SelCompanyByNamesResp {
+  repeated CommonCompanyVo list = 1;
+}
+
+//配送企业列表查询
+message ListCompanyReq {
+  string  companyName = 1;
+  string companyCode = 2;
+  string validStatus = 3;
+  Page page = 4;
+  int64 managerId = 5;
+  repeated int64 companyIds = 6;
+}
+
+message ListCompanyResp {
+  repeated ListCompanyVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListCompanyVo {
+  int64 companyId = 1;
+  string companyName = 2;
+  string companyCode = 3;
+  string managerName = 4;
+  string managerPhone = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+  string hashInfo = 9;
+  google.protobuf.Timestamp createdAt = 10;
+  string logoUrl = 11;
+}
+//配送企业基础信息创建
+message CreateOneCompanyReq {
+  string  companyName = 1;
+  string  companyCode = 2;
+  string managerName = 3;
+  string managerPhone = 4;
+  string province = 5;
+  string city = 6;
+  string zone = 7;
+  int64   managerId = 8;
+}
+
+message CreateOneCompanyResp {
+  int64 result = 1;
+}
+
+//配送企业基础信息更新
+message UpdateOneCompanyReq {
+  string  companyName = 1;
+  string  companyCode = 2;
+  string managerName = 3;
+  string managerPhone = 4;
+  string province = 5;
+  string city = 6;
+  string zone = 7;
+  int64   managerId = 8;
+  int64  companyId = 9;
+  string  logoUrl = 10;
+}
+
+message UpdateOneCompanyResp {
+  int64 result = 1;
+}
+
+//招采异常订单列表
+message ListTpPlanErrReq {
+  string  tpOrderCode = 1;
+  string medicineName = 2;
+  string medicineCode = 3;
+  google.protobuf.Timestamp stratDate = 4;
+  google.protobuf.Timestamp endDate = 5;
+  Page page = 6;
+  int64 managerId = 7;
+}
+
+message ListTpPlanErrResp {
+  repeated ListTpPlanErrVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListTpPlanErrVo {
+  int64 tpSyncShipmentPlanId = 1;
+  string tpOrderCode = 2;
+  string tenderPlatformCode = 3;
+  string medicineName = 4;
+  string medicineCode = 5;
+  string medicineSpecification = 6;
+  int64 tpShipmentAmount = 7;
+  int64 tpPrice = 8;
+  string companyName = 9;
+  string miName = 10;
+  string errMsg = 11;
+  google.protobuf.Timestamp createdAt = 12;
+}
+//异常招采单处理
+message UpdateErrShipmentPlanReq {
+  int64  tpShipmentPlanId = 1;
+  int64  managerId = 2;
+}
+
+message UpdateErrShipmentPlanResp {
+  int64 result = 1;
+}
+//招采单列表
+message ListShipmentPlanReq {
+  string  tpOrderNo = 1;
+  string  shipmentNo = 2;
+  string medicineName = 3;
+  string medicineCode = 4;
+  string companyCode = 5;
+  string planStatus = 6;
+  google.protobuf.Timestamp stratDate = 7;
+  google.protobuf.Timestamp endDate = 8;
+  Page page = 9;
+  int64 managerId = 10;
+  int64 miId = 11;
+  int64 companyId = 12;
+  string miName = 13;
+  string tpCode = 14;
+  string companyName = 15;
+  string miCode = 16;
+  string orderNo = 17;
+  string columnName = 18;
+  string sortType = 19;
+}
+
+message ListShipmentPlanResp {
+  repeated ListShipmentPlanrVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListShipmentPlanrVo {
+  int64 shipmentPlanId = 1;
+  string tpOrderNo = 2;
+  string orderNo = 3;
+  string invoiceNo = 4;
+  string invoiceCode = 5;
+  string tpCode = 6;
+  string medicineName = 7;
+  string medicineCode = 8;
+  string medicineSpecification = 9;
+  int64 shipmentPrice = 10;
+  int64 shipmentAmount = 11;
+  int64 orderAmount = 12;
+  string companyName = 13;
+  string miName = 14;
+  google.protobuf.Timestamp tpCreatedAt = 15;
+  google.protobuf.Timestamp receiveAt = 16;
+  string planStatus = 17;
+  string manufacturer = 18;
+  string tagName = 19;
+  string medicineForm = 20;
+  string medicineUnit = 21;
+  int64 calculateRate = 22;
+  int64 medicineId = 23;
+  string shipmentNo = 24;
+  string companyCode = 25;
+  string miCode = 26;
+  google.protobuf.Timestamp sendDeadline = 27;
+  google.protobuf.Timestamp startSendAt = 28;
+  google.protobuf.Timestamp receiveDeadline = 29;
+  google.protobuf.Timestamp createdAt = 30;
+  int64 sentAmount = 31 ;
+  int64 receivedAmount = 32 ;
+  int64 returnAmount = 33;
+}
+//根据配送单号查询配送单详情
+message DetailShipmentOrderReq {
+  string shipmentNo = 1;
+  int64 managerId = 2;
+  int64 miId = 3;
+  int64 comId = 4;
+}
+//先返回部分关键字段
+message DetailShipmentOrderResp {
+  int64 mibId = 1;
+  int64 shipmentOrderId = 2;
+  string companyCode = 3;
+  string companyName = 4;
+  string shipmentNo = 5;
+  string shipmentCode = 6;
+  string shipmentCompany = 7;
+  string invoiceNo = 8;
+  string invoiceCode = 9;
+  int64 orderAmount = 10;
+  string shipmentStatus = 11;
+  string miCode = 12;
+  string miName = 13;
+}
+//招采单列表(根据配送编号查询)
+message ListShipmentPlanForOrderReq {
+  //  string  tpOrderCode = 1;
+  string  shipmentNo = 1;
+  //  string medicineName = 3;
+  //  string medicineCode = 4;
+  //  string companyCode = 5;
+  //  string planStatus = 6;
+  //  google.protobuf.Timestamp stratDate = 7;
+  //  google.protobuf.Timestamp endDate = 8;
+  //  Page page = 9;
+  int64 managerId = 2;
+  int64 miId = 3;
+  int64 comId = 4;
+}
+
+message ListShipmentPlanForOrderResp {
+  repeated ListShipmentPlanForOrderVo list = 1;
+}
+
+
+message ListShipmentPlanForOrderVo {
+  string orderNo = 1;
+  string tpOrderNo = 2;
+  string tpCode = 3;
+  string medicineName = 4;
+  string medicineCode = 5;
+  string tagName = 6;
+  string medicineSpecification = 7;
+  int64 shipmentAmount = 8;
+  int64 orderAmount = 9;
+  google.protobuf.Timestamp tpCreatedAt = 10;
+  string miName = 11;
+  string returnStatus = 12;
+  int64 returnNum = 13;
+  google.protobuf.Timestamp returnTime = 14;
+  int64 returnApplyAmount = 15; // 申请中的退货数量
+}
+//招采单汇总
+message CountShipmentPlanReq {
+  google.protobuf.Timestamp startDate = 1;
+  google.protobuf.Timestamp endDate = 2;
+  int64 miId = 3;
+  int64 companyId = 4;
+  int64 managerId = 5;
+}
+
+message CountShipmentPlanResp {
+  int64 waitNum = 1;
+  int64 failNum = 2;
+  int64 completeNum = 3;
+}
+//配送单创建
+message CreateShipmentOrderReq {
+  string miCode = 1;
+  string companyCode = 2;
+  string invoiceMd5 = 3;
+  string invoiceUrl = 4;
+  string invoiceType = 5;
+  int64 invoiceTotal = 6;
+  int64 invoiceTax = 7;
+  string invoiceCheckCode = 8;
+  string invoiceNo = 9;
+  string invoiceCode = 10;
+  google.protobuf.Timestamp invoiceDate = 11;
+  google.protobuf.Timestamp sendOutAt = 12;
+  int64 orderAmount = 13;
+  string shipmentCode = 14;
+  string shipmentCompany = 15;
+  repeated int64 shipmentPlanIds = 16;
+  int64 managerId = 17;
+}
+
+message CreateShipmentOrderResp {
+  string shipmentNo = 1;
+}
+
+//配送单列表
+message ListShipmentOrderReq {
+  int64 companyId = 1;
+  int64 miId = 2;
+  string shipmentStatus = 3;
+  string shipmentNo = 4;
+  string invoiceNo = 5;
+  string invoiceCode = 6;
+  string shipmentCode = 7;
+  google.protobuf.Timestamp startDate = 8;
+  google.protobuf.Timestamp endDate = 9;
+  Page page = 10;
+  int64 managerId = 11;
+  //获取在这个收货截止日期在这个日期之前的未送达以及超时送达的订单
+  google.protobuf.Timestamp receiveDeadline = 12;
+  string miName = 13;
+  string comName = 14;
+}
+
+message ListShipmentOrderResp {
+  repeated ListShipmentOrderVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListShipmentOrderVo {
+  int64 shipmentOrderId = 1;
+  string shipmentNo = 2;
+  string invoiceNo = 3;
+  string invoiceCode = 4;
+  string shipmentCode = 5;
+  string miName = 6;
+  int64 orderAmount = 7;
+  google.protobuf.Timestamp sendOutAt = 8;
+  google.protobuf.Timestamp receiveDeadline = 9;
+  string shipmentStatus = 10;
+  string companyName = 11;
+}
+
+//配送单表头汇总
+message CountShipmentOrderReq {
+  string companyCode = 1;
+  google.protobuf.Timestamp startDate = 2;
+  google.protobuf.Timestamp endDate = 3;
+  int64 managerId = 4;
+}
+
+message CountShipmentOrderResp {
+  int64 shipmentOrderCount = 1;
+  int64 shipmentPlanCount = 2;
+}
+//配送单修改
+message ReceiveShipmentOrderReq {
+  string shipmentNo = 1;
+  int64 miId = 2;
+  int64 managerId = 3;
+}
+
+message ReceiveShipmentOrderResp {
+  string code = 1;
+  string msg = 2;
+}
+
+//根据招采单(配送计划)id查询合同编号
+message GetContractByShipmentPlanIdReq {
+  int64 shipmentId = 1;
+  int64 managerId = 2;
+}
+
+message GetContractByShipmentPlanIdResp {
+  int64 contractId = 1;
+  string contractNo = 2;
+}
+
+message InsertConfigsReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated CommonConfig configs = 2;
+}
+message UpdateConfigReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //条件生效顺序 id>key> type 1,2,3
+  int64 configId = 2;
+  string key = 3;
+  string typeOne = 4;
+  string typeTwo = 5;
+  string typeThree = 6;
+  string oldValue = 7;
+  string value = 8;
+}
+message DeleteConfigsReq {
+  int64 managerId = 1;
+  //指定要删除的id，id必填
+  repeated int64 configIds = 2;
+  //以下为限制项目，
+  string key = 3;
+  string typeOne = 4;
+  string typeTwo = 5;
+  string typeThree = 6;
+}
+
+message GetConfigReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //不指定page默认为20个
+  Page page = 2;
+  repeated string keys = 3;
+  string typeOne = 4;
+  string typeTwo = 5;
+  string typeThree = 6;
+  //可以获取该区间正在生效的所有配置
+  google.protobuf.Timestamp startAt = 7;
+  google.protobuf.Timestamp endAt = 8;
+  //获取在此时间节点生效的配置
+  google.protobuf.Timestamp validateTime = 9;
+}
+message CommonConfig{
+  int64 configId = 1;
+  string key = 2;
+  string typeOne = 3;
+  string typeTwo = 4;
+  string typeThree = 5;
+  string value = 6;
+  google.protobuf.Timestamp startAt = 7;
+  google.protobuf.Timestamp endAt = 8;
+  string explain = 9;
+  google.protobuf.Timestamp created = 10;
+}
+message UpdateConfigResp {
+
+}
+message InsertConfigsResp {
+
+}
+message DeleteConfigsResp {
+
+}
+message GetConfigResp {
+  repeated CommonConfig list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+//招采单报表可选聚合维度
+message PlanReportGroupCondition {
+  //直接聚合为单行，使用此项则其他聚合条件不生效
+  bool byAll = 1;
+  //时间维度聚合,注意对于月报，按日聚合无效，年报类推
+  bool byMonth = 2;
+  bool byYear = 3;
+  bool byDay = 4;
+  //业务维度
+  bool byMi = 5;
+  bool byCom = 6;
+  bool byMedicine = 7;
+
+}
+//招采单报表可选数据筛选维度
+message PlanReportGetCondition {
+  //指定获取哪家医院的数据
+  repeated int64 miIds = 1;
+  //指定获取哪家配送企业的数据
+  repeated int64 comIds = 2;
+  repeated string medicineCodes = 3;
+  //用于药品名模糊搜索，只显示5个候选药品
+  string medicineName = 4;
+  //用于医院名模糊搜索，只显示5个候选医院
+  string miName = 5;
+  //用于企业名模糊搜索，只显示5个候选医院
+  string comName = 6;
+  //按某个标签显示
+  int64 tagId = 7;
+}
+message GetShipmentPlanReportsReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  PlanReportGetCondition optionalFilterCond = 5;
+  PlanReportGroupCondition optionalGroupCond = 6;
+  Page page = 7;
+}
+message CompanyReportVo {
+  int64 companyId = 1;
+  string companyName = 2;
+  string companyCode = 3;
+  string managerName = 4;
+  string managerPhone = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+}
+message MiReportVo {
+  int64   miId = 1;
+  string  miCode = 2;
+  string  miName = 3;
+  string  miType = 4;
+  string  managerName = 5;
+  string  managerPhone = 6;
+  string  province = 7;
+  string  city = 8;
+  string  zone = 9;
+}
+message MedicineReportVo {
+  int64   medicineId = 1;
+  string  medicineName = 2;
+  string  medicineCode = 3;
+  string  medicineSpecification = 4;
+  string  medicineForm = 5;
+  string  medicinePackage = 6;
+  int64  calculateRate = 7;
+  string  manufacturer = 8;
+  string  medicineUnit = 9;
+  string tagName = 10;
+}
+message ShipmentPlanDayReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 day = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  MedicineReportVo medicineInfo = 7;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 8;
+  int64 shipmentPlanCount = 9;
+  int64 shipmentPlanUnitCount = 10;
+  int64 shipmentPlanReceiveAmount = 11;
+  int64 shipmentPlanReceiveCount = 12;
+  int64 shipmentPlanReceiveUnitCount = 13;
+  int64 shipmentPlanNotSentAmount = 14;
+  int64 shipmentPlanNotSentCount = 15;
+  int64 shipmentPlanNotSentUnitCount = 16;
+  google.protobuf.Timestamp reportDate = 17;
+}
+message ShipmentPlanMonthReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 mibId = 3;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 4;
+  MiReportVo miInfo = 5;
+  MedicineReportVo medicineInfo = 6;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 7;
+  int64 shipmentPlanCount = 8;
+  int64 shipmentPlanUnitCount = 9;
+  int64 shipmentPlanReceiveAmount = 10;
+  int64 shipmentPlanReceiveCount = 11;
+  int64 shipmentPlanReceiveUnitCount = 12;
+  int64 shipmentPlanNotSentAmount = 13;
+  int64 shipmentPlanNotSentCount = 14;
+  int64 shipmentPlanNotSentUnitCount = 15;
+  google.protobuf.Timestamp reportDate = 16;
+}
+message ShipmentPlanYearReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 mibId = 2;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 3;
+  MiReportVo miInfo = 4;
+  MedicineReportVo medicineInfo = 5;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 6;
+  int64 shipmentPlanCount = 7;
+  int64 shipmentPlanUnitCount = 8;
+  int64 shipmentPlanReceiveAmount = 9;
+  int64 shipmentPlanReceiveCount = 10;
+  int64 shipmentPlanReceiveUnitCount = 11;
+  int64 shipmentPlanNotSentAmount = 12;
+  int64 shipmentPlanNotSentCount = 13;
+  int64 shipmentPlanNotSentUnitCount = 14;
+  google.protobuf.Timestamp reportDate = 15;
+}
+message GetShipmentPlanDayReportsResp {
+  repeated ShipmentPlanDayReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentPlanMonthReportsResp {
+  repeated ShipmentPlanMonthReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetShipmentPlanYearReportsResp {
+  repeated ShipmentPlanYearReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+//配送单报表可选聚合维度
+message OrderReportGroupCondition {
+  //直接聚合为单行，使用此项则其他聚合条件不生效
+  bool byAll = 1;
+  //时间维度聚合,注意对于月报，按日聚合无效，年报类推
+  bool byMonth = 2;
+  bool byYear = 3;
+  bool byDay = 4;
+  //业务维度
+  bool byMi = 5;
+  bool byCom = 6;
+}
+//配送单报表可选数据筛选维度
+message OrderReportGetCondition {
+  //指定获取哪家医院的数据
+  repeated int64 miIds = 1;
+  //指定获取哪家配送企业的数据
+  repeated int64 comIds = 2;
+  //用于医院名模糊搜索，只显示5个候选医院
+  string miName = 3;
+  //用于配送企业名模糊搜索，只显示5个候选
+  string comName = 4;
+}
+
+message GetShipmentOrderReportsReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  OrderReportGetCondition optionalFilterCond = 5;
+  OrderReportGroupCondition optionalGroupCond = 6;
+  Page page = 7;
+}
+message ShipmentOrderDayReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 day = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  int64 shipmentOrderPaidAmount = 7;
+  int64 shipmentOrderPaidCount = 8;
+  int64 shipmentOrderSpecialPayAmount = 9;
+  int64 shipmentOrderSpecialPayCount = 10;
+  int64 shipmentOrderNormalPayAmount = 11;
+  int64 shipmentOrderNormalPayCount = 12;
+  int64 shipmentOrderReceiveAmount = 13;
+  int64 shipmentOrderReceiveCount = 14;
+  int64 shipmentOrderTimeoutAmount = 15;
+  int64 shipmentOrderTimeoutCount = 16;
+  google.protobuf.Timestamp reportDate = 17;
+}
+message ShipmentOrderMonthReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  google.protobuf.Timestamp reportDate = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  int64 shipmentOrderPaidAmount = 7;
+  int64 shipmentOrderPaidCount = 8;
+  int64 shipmentOrderSpecialPayAmount = 9;
+  int64 shipmentOrderSpecialPayCount = 10;
+  int64 shipmentOrderNormalPayAmount = 11;
+  int64 shipmentOrderNormalPayCount = 12;
+  int64 shipmentOrderReceiveAmount = 13;
+  int64 shipmentOrderReceiveCount = 14;
+  int64 shipmentOrderTimeoutAmount = 15;
+  int64 shipmentOrderTimeoutCount = 16;
+}
+message ShipmentOrderYearReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  google.protobuf.Timestamp reportDate = 2;
+  int64 mibId = 3;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 4;
+  MiReportVo miInfo = 5;
+  int64 shipmentOrderPaidAmount = 6;
+  int64 shipmentOrderPaidCount = 7;
+  int64 shipmentOrderSpecialPayAmount = 8;
+  int64 shipmentOrderSpecialPayCount = 9;
+  int64 shipmentOrderNormalPayAmount = 10;
+  int64 shipmentOrderNormalPayCount = 11;
+  int64 shipmentOrderReceiveAmount = 12;
+  int64 shipmentOrderReceiveCount = 13;
+  int64 shipmentOrderTimeoutAmount = 14;
+  int64 shipmentOrderTimeoutCount = 15;
+}
+message GetShipmentOrderDayReportsResp {
+  repeated ShipmentOrderDayReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetShipmentOrderMonthReportsResp {
+  repeated ShipmentOrderMonthReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetShipmentOrderYearReportsResp {
+  repeated ShipmentOrderYearReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+
+//配送单报表可选聚合维度
+message FactoringReportGroupCondition {
+  //直接聚合为单行，使用此项则其他聚合条件不生效
+  bool byAll = 1;
+  //时间维度聚合,注意对于月报，按日聚合无效，年报类推
+  bool byMonth = 2;
+  bool byYear = 3;
+  bool byDay = 4;
+  //业务维度
+  bool byMi = 5;
+  bool byCom = 6;
+}
+//配送单报表可选数据筛选维度
+message FactoringReportGetCondition {
+  //指定获取哪家医院的数据
+  repeated int64 miIds = 1;
+  //指定获取哪家配送企业的数据
+  repeated int64 comIds = 2;
+  //用于医院名模糊搜索，只显示5个候选医院
+  string miName = 3;
+  //用于配送企业名模糊搜索，只显示5个候选
+  string comName = 4;
+}
+message GetFactoringOrderReportsReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  FactoringReportGetCondition optionalFilterCond = 5;
+  FactoringReportGroupCondition optionalGroupCond = 6;
+  Page page = 7;
+}
+
+message FactoringOrderDayReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 day = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  int64 factoringAmount = 7;
+  int64 factoringCount = 8;
+  int64 factoringFailAmount = 9;
+  int64 factoringFailCount = 10;
+  int64 factoringApplyAmount = 11;
+  int64 factoringApplyCount = 12;
+  int64 shipmentOrderFactoringNotApplyAmount = 13;
+  int64 shipmentOrderFactoringNotApplyCount = 14;
+  google.protobuf.Timestamp reportDate = 15;
+}
+message GetFactoringOrderDayReportsResp {
+  repeated FactoringOrderDayReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message FactoringOrderMonthReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 mibId = 3;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 4;
+  MiReportVo miInfo = 5;
+  int64 factoringAmount = 6;
+  int64 factoringCount = 7;
+  int64 factoringFailAmount = 8;
+  int64 factoringFailCount = 9;
+  int64 factoringApplyAmount = 10;
+  int64 factoringApplyCount = 11;
+  int64 shipmentOrderFactoringNotApplyAmount = 12;
+  int64 shipmentOrderFactoringNotApplyCount = 13;
+  google.protobuf.Timestamp reportDate = 14;
+}
+message GetFactoringOrderMonthReportsResp {
+  repeated FactoringOrderMonthReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message FactoringOrderYearReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  google.protobuf.Timestamp reportDate = 2;
+  int64 mibId = 3;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 4;
+  MiReportVo miInfo = 5;
+  int64 factoringAmount = 6;
+  int64 factoringCount = 7;
+  int64 factoringFailAmount = 8;
+  int64 factoringFailCount = 9;
+  int64 factoringApplyAmount = 10;
+  int64 factoringApplyCount = 11;
+  int64 shipmentOrderFactoringNotApplyAmount = 12;
+  int64 shipmentOrderFactoringNotApplyCount = 13;
+}
+message GetFactoringOrderYearReportsResp {
+  repeated FactoringOrderYearReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+//合同报表可选数据筛选维度
+message ContractPlanReportGetCondition {
+  //指定获取哪家医院的数据
+  repeated int64 miIds = 1;
+  //指定获取哪家配送企业的数据
+  repeated int64 comIds = 2;
+  repeated string medicineCodes = 3;
+  //用于药品名模糊搜索，只显示5个候选药品
+  string medicineName = 4;
+  //用于医院名模糊搜索，只显示5个候选医院
+  string miName = 5;
+  //用于企业名模糊搜索，只显示5个候选医院
+  string comName = 6;
+  //按某个标签显示
+  int64 tagId = 7;
+  //按某份合同聚合
+  string contractNo = 8;
+  //按子合同聚合等效于 按照 com,mi,medicine,contract聚合
+  int64 contractId = 9;
+  //合同起止时间过滤
+  google.protobuf.Timestamp contractStartBegin = 10;
+  google.protobuf.Timestamp contractStartEnd = 11;
+}
+//合同报表可选聚合维度
+message ContractPlanReportGroupCondition {
+  //直接聚合为单行，使用此项则其他聚合条件不生效
+  bool byAll = 1;
+  //时间维度聚合,注意对于月报，按日聚合无效，年报类推
+  bool byMonth = 2;
+  bool byYear = 3;
+  bool byDay = 4;
+  //业务维度
+  bool byMi = 5;
+  bool byCom = 6;
+  bool byMedicine = 7;
+  bool byContract = 8;
+  //按照子合同聚合
+  bool byContractMi = 9;
+}
+//此操作或合并合同的当前状态参数，而不是数据报表的
+message GetContractPlanReportsReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  ContractPlanReportGetCondition optionalFilterCond = 5;
+  ContractPlanReportGroupCondition optionalGroupCond = 6;
+  Page page = 7;
+}
+
+
+message ContractReportVo {
+  string contractNo = 1;
+  //投标企业名
+  string tenderCompany = 2;
+  //中标价格 单位分/包装
+  int64  medicinePrice = 3;
+  //已确认收货的数量
+  int64  medicineReceive = 4;
+  //预计采购量
+  int64  totalAmount = 5;
+  google.protobuf.Timestamp startAt = 6;
+  google.protobuf.Timestamp endAt = 7;
+}
+message ContractMiReportVo {
+  int64   miContractId = 1;
+  int64  medicinePrice = 2;
+  int64  medicineAmount = 3;
+  int64  medicineSent = 4;
+  int64  medicineReceive = 5;
+}
+message ContractPlanDayReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  int64 day = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  MedicineReportVo medicineInfo = 7;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 8;
+  int64 shipmentPlanCount = 9;
+  int64 shipmentPlanUnitCount = 10;
+  int64 shipmentPlanReceiveAmount = 11;
+  int64 shipmentPlanReceiveCount = 12;
+  int64 shipmentPlanReceiveUnitCount = 13;
+  int64 shipmentPlanNotSentAmount = 14;
+  int64 shipmentPlanNotSentCount = 15;
+  int64 shipmentPlanNotSentUnitCount = 16;
+  int64 factoringAmount = 17;
+  google.protobuf.Timestamp reportDate = 18;
+  ContractReportVo contractInfo = 19;
+  ContractMiReportVo contractMiInfo = 20;
+}
+
+message GetContractPlanDayReportsResp {
+  repeated ContractPlanDayReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ContractPlanMonthReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  int64 month = 2;
+  ContractMiReportVo contractMiInfo = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  MedicineReportVo medicineInfo = 7;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 8;
+  int64 shipmentPlanCount = 9;
+  int64 shipmentPlanUnitCount = 10;
+  int64 shipmentPlanReceiveAmount = 11;
+  int64 shipmentPlanReceiveCount = 12;
+  int64 shipmentPlanReceiveUnitCount = 13;
+  int64 shipmentPlanNotSentAmount = 14;
+  int64 shipmentPlanNotSentCount = 15;
+  int64 shipmentPlanNotSentUnitCount = 16;
+  int64 factoringAmount = 17;
+  google.protobuf.Timestamp reportDate = 18;
+  ContractReportVo contractInfo = 19;
+}
+
+message GetContractPlanMonthReportsResp {
+  repeated ContractPlanMonthReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ContractPlanYearReport {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 year = 1;
+  ContractReportVo contractInfo = 2;
+  ContractMiReportVo contractMiInfo = 3;
+  int64 mibId = 4;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 5;
+  MiReportVo miInfo = 6;
+  MedicineReportVo medicineInfo = 7;
+  //本日配送计划同步金额
+  int64 shipmentPlanAmount = 8;
+  int64 shipmentPlanCount = 9;
+  int64 shipmentPlanUnitCount = 10;
+  int64 shipmentPlanReceiveAmount = 11;
+  int64 shipmentPlanReceiveCount = 12;
+  int64 shipmentPlanReceiveUnitCount = 13;
+  int64 shipmentPlanNotSentAmount = 14;
+  int64 shipmentPlanNotSentCount = 15;
+  int64 shipmentPlanNotSentUnitCount = 16;
+  int64 factoringAmount = 17;
+  google.protobuf.Timestamp reportDate = 18;
+}
+
+message GetContractPlanYearReportsResp {
+  repeated ContractPlanYearReport list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message ContractSum{
+  //预计总金额
+  int64  medicineMoney = 1;
+  //预计总量
+  int64  medicineAmount = 2;
+  int64  medicineSent = 4;
+  int64  medicineReceive = 5;
+  //如果聚合时不含此列，则信息不存在
+  CompanyReportVo companyInfo = 6;
+  MiReportVo miInfo = 7;
+  MedicineReportVo medicineInfo = 8;
+  ContractReportVo contractInfo = 9;
+  ContractMiReportVo contractMiInfo = 10;
+}
+message GetContractSumResp {
+  repeated ContractSum list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+//查询当前时间点生效的合同信息
+message GetValidContractInfoReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪家医院的聚合数据
+  int64 miId = 2;
+  //指定获取哪家配送企业的聚合数据 不可同时指定
+  int64 comId = 3;
+}
+//查询当前时间点需要支付的金额
+message GetCurrentNeedPayReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪家医院的聚合数据
+  int64 miId = 2;
+  //指定获取哪家配送企业的聚合数据 不可同时指定
+  int64 comId = 3;
+}
+
+//查询当前时间点保理待审核金额
+message GetCurrentFactoringApplyReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪家医院的聚合数据
+  int64 miId = 2;
+  //指定获取哪家配送企业的聚合数据 不可同时指定
+  int64 comId = 3;
+}
+
+message GetValidContractInfoResp {
+  //有效合同金额
+  int64 validContractAmount = 1;
+  //有效合同数量
+  int64 validContractCount = 2;
+}
+
+message GetCurrentNeedPayResp {
+  //待支付金额
+  int64 needPayAmount = 1;
+}
+
+
+message GetCurrentFactoringApplyResp {
+  //待审核金额
+  int64 factoringApplyAmount = 1;
+}
+
+message GetCompanyHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 companyIds = 2;
+  repeated string companyCodes = 3;
+}
+message GetCompanyHashResp {
+  repeated CompanyHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message CompanyHash{
+  int64 companyId = 1;
+  string companyCode = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetMiHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 miIds = 2;
+  repeated string miCodes = 3;
+}
+
+message MiHash{
+  int64 miId = 1;
+  string miCode = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetMiHashResp {
+  repeated MiHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetMedicineReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 medicineIds = 2;
+  repeated string medicineCodes = 3;
+}
+message MedicineHash{
+  int64 medicineId = 1;
+  string medicineCode = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetMedicineResp {
+  repeated MedicineHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetContractHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 contractIds = 2;
+  repeated string contractCodes = 3;
+}
+message ContractHash{
+  int64 contractId = 1;
+  string contractCode = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetContractHashResp {
+  repeated ContractHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetContractMiHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 contractMiIds = 2;
+  int64 contractId = 3;
+  string contractCode = 4;
+}
+message ContractMiHash{
+  int64 contractMiId = 1;
+  int64 miId = 2;
+  string miCode = 3;
+  string infoHash = 4;
+  google.protobuf.Timestamp infoUploadAt = 5;
+}
+message GetContractMiHashResp {
+  repeated ContractMiHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetConfigHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 configIds = 2;
+  repeated string configKeys = 3;
+  string configType = 4;
+}
+message ConfigHash{
+  int64 configId = 1;
+  string configKey = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetConfigHashResp {
+  repeated ConfigHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentPlanHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 shipmentPlanIds = 2;
+  repeated string orderNos = 3;
+  string shipmentNo = 4;
+}
+message ShipmentPlanHash{
+  int64 shipmentPlanId = 1;
+  string orderNo = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+  string qrCodeHash = 5;
+  google.protobuf.Timestamp qrCodeUploadAt = 6;
+  string shipmentStartHash = 7;
+  google.protobuf.Timestamp shipmentStartUploadAt = 8;
+  string shipmentReceiveHash = 9;
+  google.protobuf.Timestamp shipmentReceiveUploadAt = 10;
+  string shipmentEnterHash = 11;
+  google.protobuf.Timestamp shipmentEnterUploadAt = 12;
+}
+message GetShipmentPlanHashResp {
+  repeated ShipmentPlanHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentOrderHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 shipmentOrderIds = 2;
+  repeated string shipmentNos = 3;
+}
+message ShipmentOrderHash{
+  int64 shipmentOrderId = 1;
+  string shipmentNo = 2;
+  string qrCodeHash = 3;
+  google.protobuf.Timestamp qrCodeUploadAt = 4;
+  string shipmentStartHash = 5;
+  google.protobuf.Timestamp shipmentStartUploadAt = 6;
+  string shipmentReceiveHash = 7;
+  google.protobuf.Timestamp shipmentReceiveUploadAt = 8;
+  string shipmentEnterHash = 9;
+  google.protobuf.Timestamp shipmentEnterUploadAt = 10;
+}
+message GetShipmentOrderHashResp {
+  repeated ShipmentOrderHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentPayHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 shipmentOrderIds = 2;
+  repeated int64 shipmentPayOrderIds = 3;
+  repeated string shipmentNos = 4;
+}
+message ShipmentPayHash{
+  int64 shipmentOrderId = 1;
+  string shipmentNo = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+  string resultHash = 5;
+  google.protobuf.Timestamp resultUploadAt = 6;
+}
+message GetShipmentPayHashResp {
+  repeated ShipmentPayHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentFactoringHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 factoringOrderIds = 2;
+  repeated string factoringOrderNos = 3;
+}
+message ShipmentFactoringHash{
+  int64 factoringOrderId = 1;
+  string factoringOrderNo = 2;
+  string applyHash = 3;
+  google.protobuf.Timestamp applyUploadAt = 4;
+  string resultHash = 5;
+  google.protobuf.Timestamp resultUploadAt = 6;
+  string payBackHash = 7;
+  google.protobuf.Timestamp payBackUploadAt = 8;
+}
+message GetShipmentFactoringHashResp {
+  repeated ShipmentFactoringHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListMessageHashReq {
+  int64 managerId = 1;
+  repeated int64 messageIds = 2;
+}
+message MessageListHash{
+  int64 uploadChainMessageId = 1;
+  int64 messageId = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message ListMessageHashResp {
+  repeated MessageListHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+
+message GetShipmentRankMedicineDataYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  int64 rankCount = 5;
+  //显示哪家医疗机构的排名数据
+  int64 miId = 6;
+}
+
+message ShipmentRankMedicineDataYear {
+  int64 rank = 1;
+  //本年配送计划同步金额 分
+  int64 shipmentPlanAmount = 2;
+  string medicineName = 3;
+}
+message GetShipmentRankMedicineDataYearResp {
+  repeated ShipmentRankMedicineDataYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+
+message GetShipmentRankCompanyDataYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //报表的起止日期必填
+  google.protobuf.Timestamp startAt = 3;
+  google.protobuf.Timestamp endAt = 4;
+  int64 rankCount = 5;
+  //需要展示的药品数量
+  int64 medicineCount = 6;
+  //显示哪家医疗机构的排名数据
+  int64 miId = 7;
+}
+
+message ShipmentRankCompanyMedicine {
+  string medicineName = 1;
+}
+message ShipmentRankCompanyDataYear {
+  int64 rank = 1;
+  string comName = 2;
+  string comCode = 3;
+  int64 shipmentPlanAmount = 4;
+  string province = 5;
+  string city = 6;
+  string zone = 7;
+  repeated ShipmentRankCompanyMedicine medicines = 8;
+}
+message GetShipmentRankCompanyDataYearResp {
+  repeated ShipmentRankCompanyDataYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+
+message GetRankMiReceiveYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //0表示当前前年 -1为去年
+  int64 yearOffset = 3;
+  //报表的起止日期必填
+  int64 rankCount = 4;
+
+}
+message RankMiReceiveYear {
+  int64 rank = 1;
+  string miName = 2;
+  int64 shipmentOrderReceiveAmount = 3;
+  repeated ShipmentOrderMonthReport shipmentOrderMonthReports = 4;
+}
+message GetRankMiReceiveYearResp {
+  repeated RankMiReceiveYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetRankComReceiveYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //0表示当前前年 -1为去年
+  int64 yearOffset = 3;
+  //报表的起止日期必填
+  int64 rankCount = 4;
+}
+message RankComReceiveYear {
+  int64 rank = 1;
+  string companyName = 2;
+  int64 shipmentPlanReceiveCount = 3;
+  int64 shipmentPlanNotSentCount = 4;
+}
+message GetRankComReceiveYearResp {
+  repeated RankComReceiveYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetRankMiPaidYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //0表示当前前年 -1为去年
+  int64 yearOffset = 3;
+  //报表的起止日期必填
+  int64 rankCount = 4;
+}
+message RankMiPaidYear {
+  int64 rank = 1;
+  string miName = 2;
+  int64 shipmentOrderPaidAmount = 3;
+  int64 shipmentOrderNormalPayAmount = 4;
+  int64 shipmentOrderSpecialPayAmount = 5;
+}
+message GetRankMiPaidYearResp {
+  repeated RankMiPaidYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetRankMedicineYearReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  //0表示当前前年 -1为去年
+  int64 yearOffset = 3;
+  //报表的起止日期必填
+  int64 rankCount = 4;
+}
+
+message RankMedicineYear {
+  int64 rank = 1;
+  string medicineName = 2;
+  int64 shipmentPlanReceiveUnitCount = 3;
+}
+message GetRankMedicineYearResp {
+  repeated RankMedicineYear list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+message GetMIBDashboardBaseInfoReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  //指定获取哪个医保局的订单报表数据，目前不支持不同医保局混合统计
+  int64 mibId = 2;
+  string province = 3;
+  string city = 4;
+}
+message GetMIBDashboardBaseInfoResp {
+  repeated ListCompanyVo companies = 1;
+  repeated ListMiVo mis = 2;
+}
+
+message ListCompanyBindReq {
+  int64 managerId = 1;
+  string companyName = 2;
+  string companyCode = 3;
+  Page page = 4;
+  repeated string linkTypes = 5;
+}
+
+message ListCompanyBindResp {
+  repeated ListCompanyBindVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListCompanyBindVo{
+  string companyName = 1;
+  string companyCode = 2;
+  string companyBindJson = 3;
+}
+
+message ListMiBindReq {
+  int64 managerId = 1;
+  string miName = 2;
+  string miCode = 3;
+  Page page = 4;
+  repeated string linkTypes = 5;
+}
+
+message ListMiBindResp {
+  repeated ListMiBindBindVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListMiBindBindVo{
+  string miName = 1;
+  string miCode = 2;
+  string miBindJson = 3;
+}
+
+message ListMedicineBindReq {
+  int64 managerId = 1;
+  string medicineName = 2;
+  string medicineCode = 3;
+  Page page = 4;
+  repeated string linkTypes = 5;
+}
+
+message ListMedicineBindResp {
+  repeated ListMedicineBindVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListMedicineBindVo{
+  string medicineName = 1;
+  string medicineCode = 2;
+  string medicineBindJson = 3;
+  //药品规格（如20mg,2ml:200ug）
+  string  medicineSpecification = 6;
+  string  manufacturer = 7;
+  //包装单位
+  string  medicineUnit = 8;
+  //剂型（如片剂）
+  string  medicineForm = 9;
+  //药品包装(如盒，支，瓶)
+  string  medicinePackage = 10;
+}
+
+message CompanyBindReq {
+  int64 managerId = 1;
+  repeated CompanyBindParam param = 2;
+}
+
+message CompanyBindParam {
+  int64 bindId = 2;
+  string companyCode = 3;
+  string companyLinkCode = 4;
+  string linkType = 5;
+}
+
+message CompanyBindResp {
+  int64 result = 1;
+}
+
+message MiBindReq {
+  int64 managerId = 1;
+  repeated MiBindParam param = 2;
+}
+
+message MiBindParam {
+  int64 bindId = 2;
+  string miCode = 3;
+  string miLinkCode = 4;
+  string linkType = 5;
+}
+
+message MiBindResp {
+  int64 result = 1;
+}
+
+message MedicineBindReq {
+  int64 managerId = 1;
+  repeated MedicineBindParam param = 2;
+}
+
+message MedicineBindParam {
+  int64 bindId = 2;
+  string medicineCode = 3;
+  string medicineLinkCode = 4;
+  string linkType = 5;
+}
+
+message MedicineBindResp {
+  int64 result = 1;
+}
+
+message ResetContractReq {
+  int64 managerId = 1;
+  repeated ResetContractParam param = 2;
+  int64        oldContractId = 3;
+  string       contractNo = 4;
+  string       tenderCompany = 5;
+  int64        medicineId = 6;
+  int64        companyId = 7;
+  int64        mibId = 8;
+  int64        medicinePrice = 9;
+  int64        medicineReceive = 10;
+  int64        totalAmount = 11;
+  google.protobuf.Timestamp    startAt = 12;
+  google.protobuf.Timestamp     endAt = 13;
+  int64        creator = 14;
+}
+
+message ResetContractParam {
+  int64 miId = 1;
+  int64 medicineAmount = 2;
+  int64 medicineSent = 3;
+  int64 medicineReceive = 4;
+}
+
+message ResetContractResp {
+  int64 result = 1;
+}
+
+
+
+message SplitToPlanReq {
+  repeated SplitToPlan list = 1;
+  int64 managerId = 2;
+  string tpOrderNo = 3;
+  int64 currentTotal = 4;
+}
+
+message SplitToPlan {
+  string medicineCode = 1;
+  string comCode = 2;
+  string miCode = 3;
+  int64 contractMiId = 4;
+  string tpCode = 5;
+  string tpOrderNo = 6;
+  string tpOrderTitle = 7;
+  int64 TpSentAmount = 8;
+  int64 shipmentAmount = 9;
+  int64 orderAmount = 10;
+  int64 sendAmount = 11;
+  google.protobuf.Timestamp sendDeadlineWarn = 12;
+  google.protobuf.Timestamp sendDeadLine = 13;
+}
+
+message SplitToPlanResp {
+  int64 result = 1;
+}
+// ListZC
+message ListZCReq {
+  string zcStatus = 1;
+  string tpOrderNo = 2;
+  string medicineName = 3;
+  string miName = 4;
+  google.protobuf.Timestamp start = 5;
+  google.protobuf.Timestamp end = 6;
+  int64 managerId = 7;
+  Page page = 8;
+  int64 miId = 9;
+  int64 comId = 10;
+  string comName = 11;
+  string columnName = 12;
+  string sortType = 13;
+}
+message CreateZCReq {
+  string contractNo = 1;
+  int64 shipmentAmount = 2;
+  //创建哪个医院的招采需求
+  int64 miId = 3;
+  //哪个账号创建
+  int64 managerId = 4;
+  string medicineCode = 5;
+}
+message DeleteZCReq {
+  string tpOrderNo = 1;
+  //校验是否可以删除
+  int64 miId = 2;
+  int64 managerId = 3;
+}
+
+message DeleteZCResp {
+
+}
+message CreateZCResp {
+}
+message ListZCResp {
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+  repeated  ListZCVo list = 4;
+  int64 waitNum = 5;
+}
+
+message ListZCVo {
+  string tpOrderNo = 1;
+  google.protobuf.Timestamp tpTime = 2;
+  string miName = 3;
+  string miCode = 4;
+  string medicineName = 5;
+  string medicineCode = 6;
+  string comCode = 7;
+  string comName = 8;
+  string medicineSpecification = 9;
+  int64 unitPrice = 10;
+  int64 orderAmount = 11;
+  int64 shipmentAmount = 12;
+  int64 planAmount = 13;
+  int64 sentAmount = 14;
+  int64 receivedAmount = 15;
+  int64 returnAmount = 16;
+  google.protobuf.Timestamp sendDeadlineWarn = 17;
+  google.protobuf.Timestamp sendDeadline = 18;
+  int64 contractMiId = 19;
+  string tpCode = 20;
+  string tpOrderTitle = 21;
+  int64 tpSentAmount = 22;
+  int64 medicineId = 23;
+  string medicineForm = 24;
+  string medicineUnit = 25;
+  int64 calculateRate = 26;
+  string manufacturer = 27;
+  string zcStatus = 28;
+}
+
+// DetailSupplement
+message DetailSupplementReq {
+  int64 medicineId = 1;
+  int64 contractMiId = 2;
+  int64 managerId = 3;
+}
+
+message DetailSupplementResp {
+  string tagName = 1;
+  string contractNo = 2;
+}
+
+// DetailPlanList
+message DetailPlanListReq {
+  string tpOrderNo = 1;
+  int64 managerId = 3;
+}
+
+message DetailPlanListResp {
+  repeated DetailPlanList list = 1;
+}
+
+message DetailPlanList {
+  string orderNo = 1;
+  string shipmentNo = 2;
+  int64 shipmentAmount = 3;
+  int64 sentAmount = 4;
+  int64 receivedAmount = 5;
+  int64 returnAmount = 6;
+  google.protobuf.Timestamp createdAt = 7;
+}
+
+message ContractCreateReq {
+  repeated ContractParam list = 1;
+  int64 managerId = 2;
+}
+
+message ContractParam {
+  string tenderCompany = 1;
+  int64 medicineId = 2;
+  int64 companyId = 3;
+  int64 medicinePrice = 4;
+  int64 totalAmount = 5;
+  google.protobuf.Timestamp startAt = 6;
+  google.protobuf.Timestamp endAt = 7;
+  repeated ContractMiParam conMiList = 8;
+}
+
+message ContractMiParam {
+  int64 miId = 1;
+  int64 medicineAmount = 2;
+}
+
+message ContractCreateResp {
+  int64 result = 1;
+}
+
+message ReceivePlansReq {
+  repeated ReceivePlans list = 1;
+  int64 comId = 2;
+  int64 managerId = 3;
+}
+
+message ReceivePlans {
+  int64 contractMiId = 1;
+  string tpOrderNo = 2;
+}
+
+message ReceivePlansResp {
+  int64 result = 1;
+}
+
+message RemovePlansReq {
+  repeated string orderNos = 1;
+  int64 comId = 2;
+  int64 managerId = 3;
+  string tpOrderNo = 4;
+}
+
+message RemovePlansResp {
+  int64 result = 1;
+}
+
+message ContractRemoveReq {
+  int64 contractId = 1;
+  int64 managerId = 3;
+}
+
+message ContractRemoveResp {
+  int64 result = 1;
+}
+
+message ContractStopReq {
+  int64 contractId = 1;
+  int64 managerId = 3;
+}
+
+message ContractStopResp {
+  int64 result = 1;
+}
+
+message ContractEditReq {
+  int64 managerId = 1;
+  repeated EditContractMi conMiList = 2;
+  int64        contractId = 3;
+  string       contractNo = 4;
+  string       tenderCompany = 5;
+  int64        medicineId = 6;
+  int64        companyId = 7;
+  int64        mibId = 8;
+  int64        medicinePrice = 9;
+  int64        medicineReceive = 10;
+  int64        totalAmount = 11;
+  google.protobuf.Timestamp    startAt = 12;
+  google.protobuf.Timestamp     endAt = 13;
+  int64        creator = 14;
+  string       medicineCode = 15;
+  string       companyCode = 16;
+  string       activeStatus = 17;
+}
+
+message EditContractMi {
+  int64 miId = 1;
+  int64 medicineAmount = 2;
+  int64 medicineSent = 3;
+  int64 medicineReceive = 4;
+  string miCode = 5;
+  int64 contractId = 6;
+  int64 contractMiId = 7;
+}
+
+message ContractEditResp {
+  int64 result = 1;
+}
+
+// 合同药品国家规则 列表
+message ContractProportionListReq {
+  int64 managerId = 1;
+  google.protobuf.Timestamp startDate = 2;
+  google.protobuf.Timestamp endDate = 3;
+  int64 tagId = 4;
+  string medicineCode = 5;
+  string medicineName = 6;
+  string contractNo = 7;
+  Page page = 8;
+}
+
+message ContractProportionListResp {
+  repeated  ContractProportionListVo list = 4;
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+}
+
+message ContractProportionListVo {
+  string contractNo = 1;
+  string medicineName = 2;
+  string specification = 3;
+  int64 proportion = 4;
+  string proportion_key = 5;
+  string tagName = 6;
+  int64 proportionId = 7;
+}
+
+// 合同药品国家规则 列表 end
+
+// 合同药品国家规则 修改
+message ContractProportionUpdateReq {
+  int64 managerId = 1;
+  int64 proportionId = 7;
+  int64 proportion = 4;
+}
+
+message ContractProportionUpdateResp {
+  int64 result = 1;
+}
+
+// 合同药品国家规则 修改 end
+
+// 濮阳三期  回款情况 start
+
+message ReturnZoneListReq {
+  int64 managerId = 1;
+  google.protobuf.Timestamp startDate = 2;
+  google.protobuf.Timestamp endDate = 3;
+  int64 tagId = 4;
+  Page page = 8;
+}
+
+message ReturnZoneListResp {
+  repeated  ReturnZoneListVo list = 4;
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+  int64 contractSum = 5;
+  int64 planSum = 6;
+  int64 sentSum = 7;
+  int64 paidSum = 8;
+  int64 price = 9;
+  int64 paidDaysSum = 10;
+  int64 paidCountSum = 11;
+}
+
+message ReturnZoneListVo {
+  string tagName = 1;
+  string province = 2;
+  string city = 3;
+  string zone = 4;
+  int64 contractSum = 5;
+  int64 planSum = 6;
+  int64 sentSum = 7;
+  int64 paidSum = 8;
+  int64 price = 9;
+  int64 paidDaysSum = 10;
+  int64 paidCountSum = 11;
+  string areaCode = 12;
+  string areaName = 13;
+}
+
+message ReturnMiListReq {
+  int64 managerId = 1;
+  google.protobuf.Timestamp startDate = 2;
+  google.protobuf.Timestamp endDate = 3;
+  int64 tagId = 4;
+  string miCode = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+  Page page = 9;
+  string areaCode = 10;
+}
+
+message ReturnMiListResp {
+  repeated  ReturnMiListVo list = 4;
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+}
+
+message ReturnMiListVo {
+  string tagName = 1;
+  string province = 2;
+  string city = 3;
+  string zone = 4;
+  int64 contractSum = 5;
+  int64 planSum = 6;
+  int64 sentSum = 7;
+  int64 paidSum = 8;
+  int64 price = 9;
+  string miName = 10;
+  int64 paidDaysSum = 11;
+  int64 paidCountSum = 12;
+  string areaCode = 13;
+  string areaName = 14;
+}
+
+message ReturnMiMedicineListReq {
+  int64 managerId = 1;
+  google.protobuf.Timestamp startDate = 2;
+  google.protobuf.Timestamp endDate = 3;
+  int64 tagId = 4;
+  string miCode = 5;
+  string province = 6;
+  string city = 7;
+  string zone = 8;
+  Page page = 9;
+  string medicineCode = 10;
+  string areaCode = 11;
+}
+
+message ReturnMiMedicineListResp {
+  repeated  ReturnMiMedicineListVo list = 4;
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+}
+
+message ReturnMiMedicineListVo {
+  string tagName = 1;
+  string contractNo = 2;
+  string province = 3;
+  string city = 4;
+  string zone = 5;
+  string miName = 6;
+  string medicineName = 7;
+  string specification = 8;
+  string medicineCode = 9;
+  int64 contractAmount = 10;
+  int64 planAmount = 11;
+  int64 sentAmount = 12;
+  int64 paidAmount = 13;
+  int64 paidCount = 14;
+  int64 paidDays = 15;
+  int64 price = 16;
+  string areaName = 17;
+  string areaCode = 18;
+}
+// 濮阳三期  回款情况 end
+
+//区域相关 start
+message CreateAreaReq {
+  int64 managerId = 1;
+  string areaName = 2;
+  string areaCode = 3;
+}
+
+message CreateAreaResp {
+  int64 result = 1;
+}
+
+message EditAreaReq {
+  int64 managerId = 1;
+  int64 areaId = 2;
+  string areaName = 3;
+}
+
+message EditAreaResp {
+  int64 result = 1;
+}
+
+message DeleteAreaReq {
+  int64 managerId = 1;
+  string areaCode = 2;
+}
+
+message DeleteAreaResp {
+  int64 result = 1;
+}
+
+message ListAreaReq {
+  int64 managerId = 1;
+  Page page = 2;
+  string areaName = 3;
+  string areaCode = 4;
+}
+
+message ListAreaResp {
+  int64 total = 1;
+  int64 pageSize = 2;
+  int64 pageNumber = 3;
+  repeated  ListAreaVo list = 4;
+}
+
+message ListAreaVo {
+  string areaName = 1;
+  string areaCode = 2;
+  google.protobuf.Timestamp updateTime = 3;
+  int64 areaId = 4;
+  int64 miCount = 5;
+}
+
+//区域相关 end
+service ManagerService {
+
+  //区域创建
+  rpc CreateArea(CreateAreaReq) returns(CreateAreaResp);
+  //区域编辑
+  rpc EditArea(EditAreaReq) returns(EditAreaResp);
+  //区域删除
+  rpc DeleteArea(DeleteAreaReq) returns(DeleteAreaResp);
+  //区域列表
+  rpc ListArea(ListAreaReq) returns(ListAreaResp);
+  //通用区域列表
+  rpc CommonListArea(ListAreaReq) returns(ListAreaResp);
+
+
+
+  //上传合同 鹰潭  20211109
+  rpc ContractUpload(ContractCreateReq) returns(ContractCreateResp);
+
+  // 20211103 濮阳三期  新增 回款情况 报表
+  rpc ReturnZoneList(ReturnZoneListReq) returns(ReturnZoneListResp);
+  rpc ReturnMiList(ReturnMiListReq) returns(ReturnMiListResp);
+  rpc ReturnMiMedicineList(ReturnMiMedicineListReq) returns(ReturnMiMedicineListResp);
+
+  // 20211027 鹰潭新增  合同药品国家规则
+  // 合同药品国家规则 列表
+  rpc ContractProportionList(ContractProportionListReq) returns(ContractProportionListResp);
+  // 合同药品国家规则 更新
+  rpc ContractProportionUpdate(ContractProportionUpdateReq) returns(ContractProportionUpdateResp);
+
+
+  // 删除订单
+  rpc RemovePlans(RemovePlansReq) returns(RemovePlansResp);
+  // 接单
+  rpc ReceivePlans(ReceivePlansReq) returns(ReceivePlansResp);
+  // 待接单列表
+  rpc WaitList(ListZCReq) returns(ListZCResp);
+  // 拆单
+  rpc SplitToPlan(SplitToPlanReq) returns(SplitToPlanResp);
+  //招采单列表
+  rpc ListZC(ListZCReq) returns(ListZCResp);
+  //平台创建招采单逻辑
+  rpc CreateShipmentZC(CreateZCReq) returns(CreateZCResp);
+  //删除未拆单且未过期的招采单
+  rpc DeleteShipmentZC(DeleteZCReq) returns(DeleteZCResp);
+  // 招采详情补充
+  rpc DetailSupplement(DetailSupplementReq) returns(DetailSupplementResp);
+  //鹰潭 招采详情 订单列表
+  rpc DetailPlanList(DetailPlanListReq) returns(DetailPlanListResp);
+
+  //合同相关
+  //新建合同
+  rpc ContractCreate(ContractCreateReq) returns(ContractCreateResp);
+  // 删除合同
+  rpc ContractRemove(ContractRemoveReq) returns(ContractRemoveResp);
+  // 停用合同
+  rpc ContractStop(ContractStopReq) returns(ContractStopResp);
+  // 编辑合同
+  rpc ContractEdit(ContractEditReq) returns(ContractEditResp);
+
+  rpc ListContract(ContractListReq) returns(ContractListResp);
+  rpc ListMiContract(ContractMiListReq) returns(ContractMiListResp);
+  rpc CreateOneContractMI(CreateOneContractMIReq) returns(CreateOneContractMIResp);
+  rpc UpdateOneContractMI(UpdateOneContractMIReq) returns(UpdateOneContractMIResp);
+  rpc UpdateOneContract(UpdateOneContractReq) returns(UpdateOneContractResp);
+  rpc BatchOperateContract(BatchOperateContractReq) returns(BatchOperateContractResp);
+  rpc UpdateContractActive(UpdateContractActiveReq) returns(UpdateContractActiveResp);
+  rpc DeleteOneContract(DeleteOneContractReq) returns(DeleteOneContractResp);
+  rpc DeleteOneContractMi(DeleteOneContractMiReq) returns(DeleteOneContractMiResp);
+  rpc GetContractInfo(GetContractInfoReq) returns(GetContractInfoResp);
+  rpc CountContract(CountContractReq) returns(CountContractResp);
+  rpc RefreshContract(RefreshContractReq) returns(RefreshContractResp);
+  //合同重置
+  rpc ResetContract(ResetContractReq) returns(ResetContractResp);
+  //暂未使用
+  rpc ContractDetail(ContractDetailReq) returns(ContractDetailResp);
+  rpc CheckContractList(UpCheckContractReq) returns(CheckContractListResp);
+  //药品相关
+  rpc ListMedicine(MedicineListReq) returns(MedicineListResp);
+  rpc MedicineListForQuery(MedicineListForQueryReq) returns(MedicineListForQueryResp);
+  rpc CreateMedicine(CreateMedicineReq) returns(CreateMedicineResp);
+  rpc CreateBatchMedicine(CreateBatchMedicineReq) returns(CreateBatchMedicineResp);
+  rpc UpdateMedicine(UpdateMedicineReq) returns(UpdateMedicineResp);
+  rpc UpdateMedicineActive(UpdateMedicineActiveReq) returns(UpdateMedicineActiveResp);
+  rpc DeleteMedicine(DeleteMedicineReq) returns(DeleteMedicineResp);
+  rpc SelectTagByMedicineId(SelectTagByMedicineIdReq) returns(SelectTagByMedicineIdResp);
+  rpc SelectInfoByMedicineNames(SelectInfoByMedicineNamesReq) returns(SelectInfoByMedicineNamesResp);
+  //药品标签相关
+  rpc TagList(TagListReq) returns(TagListResp);
+  rpc CreateTag(CreateTagReq) returns(CreateTagResp);
+  rpc UpdateTag(UpdateTagReq) returns(UpdateTagResp);
+  rpc DeleteTag(DeleteTagReq) returns(DeleteTagResp);
+  rpc TagDetailList(TagDetailListReq) returns(TagDetailListResp);
+  rpc DeleteTagMedicine(DeleteTagMedicineReq) returns(DeleteTagMedicineResp);
+  rpc CreateTagMedicine(CreateTagMedicineReq) returns(CreateTagMedicineResp);
+  rpc CommonMedicineQuery(CommonMedicineQueryReq) returns(CommonMedicineQueryResp);
+  //医疗机构相关
+  rpc ListMi(ListMiReq) returns(ListMiResp);
+  rpc CommonMI(CommonMIReq) returns(CommonMIResp);
+  rpc CreateOneMI(CreateOneMIReq) returns(CreateOneMIResp);
+  rpc UpdateMi(UpdateMiReq) returns(UpdateMiResp);
+
+  //配送企业相关
+  rpc ListCompany(ListCompanyReq) returns(ListCompanyResp);
+  rpc CreateOneCompany(CreateOneCompanyReq) returns(CreateOneCompanyResp);
+  rpc UpdateOneCompany(UpdateOneCompanyReq) returns(UpdateOneCompanyResp);
+  rpc CommonCompany(CommonCompanyReq) returns(CommonCompanyResp);
+  rpc SelCompanyByNames(SelCompanyByNamesReq) returns(SelCompanyByNamesResp);
+
+  //招采异常订单相关
+  rpc ListTpPlanErr(ListTpPlanErrReq) returns(ListTpPlanErrResp);
+  rpc UpdateErrShipmentPlan(UpdateErrShipmentPlanReq) returns(UpdateErrShipmentPlanResp);
+  //招采单(配送)相关
+  rpc ListShipmentPlan(ListShipmentPlanReq) returns(ListShipmentPlanResp);
+  rpc CountShipmentPlan(CountShipmentPlanReq) returns(CountShipmentPlanResp);
+  //配送单详情
+  rpc DetailShipmentOrder(DetailShipmentOrderReq) returns(DetailShipmentOrderResp);
+  rpc ListShipmentPlanForOrder(ListShipmentPlanForOrderReq) returns(ListShipmentPlanForOrderResp);
+  //配送单创建
+  rpc CreateShipmentOrder(CreateShipmentOrderReq) returns(CreateShipmentOrderResp);
+  //配送单列表
+  rpc ListShipmentOrder(ListShipmentOrderReq) returns(ListShipmentOrderResp);
+  //配送单表头汇总
+  rpc CountShipmentOrder(CountShipmentOrderReq) returns(CountShipmentOrderResp);
+  //配送单收获
+  rpc ReceiveShipmentOrder(ReceiveShipmentOrderReq) returns(ReceiveShipmentOrderResp);
+  //根据招采单(配送计划)id查询合同编号
+  rpc GetContractByShipmentPlanId(GetContractByShipmentPlanIdReq) returns(GetContractByShipmentPlanIdResp);
+
+  //通用配置查询
+  rpc GetConfig(GetConfigReq) returns (GetConfigResp);
+  //修改配置
+  rpc UpdateConfig(UpdateConfigReq) returns (UpdateConfigResp);
+  //批量插入配置
+  rpc InsertConfigs(InsertConfigsReq) returns (InsertConfigsResp);
+  //删除配置
+  rpc DeleteConfigs(DeleteConfigsReq) returns (DeleteConfigsResp);
+
+  //配送企业绑定
+  rpc ListCompanyBind(ListCompanyBindReq) returns (ListCompanyBindResp);
+  rpc CompanyBind(CompanyBindReq) returns (CompanyBindResp);
+  //医疗机构绑定
+  rpc ListMiBind(ListMiBindReq) returns (ListMiBindResp);
+  rpc MiBind(MiBindReq) returns (MiBindResp);
+  //药品绑定绑定
+  rpc ListMedicineBind(ListMedicineBindReq) returns (ListMedicineBindResp);
+  rpc MedicineBind(MedicineBindReq) returns (MedicineBindResp);
+
+  // 由 contractMiId 列表 获取 主合同列表
+  rpc ListContractsByMiContractIds(MiContractIdsReq) returns (ListContractsResp);
+}
+
+message MiContractIdsReq {
+  Page page = 1;
+  int64 userId = 2;
+  repeated int64 comIds = 3;
+  repeated int64 miIds = 4;
+  repeated int64 miContractIds = 5;
+}
+
+message ListContractsResp {
+  Page page = 1;
+  int64 total = 2;
+  repeated ContractListVo list = 3;
+}
+
+
+message StockSyncReq{
+  repeated StockSyncParam param = 1;
+  int64 managerId = 2;
+  int64 orgId = 3;
+  string platFormType = 4;
+}
+
+message StockSyncParam{
+  string  medicineLinkCode = 1;
+  string  medicineLinkName = 2;
+  string  warehouseCode = 3;
+  string  changeType = 4;
+  int32 stockNum = 5;
+  sint32 num = 6;
+  google.protobuf.Timestamp changeTime = 7;
+}
+
+message StockSyncResp{
+  int64 result = 1;
+}
+
+message ComStockMedicineBindListReq{
+  Page page = 1;
+  int64 managerId = 2;
+  string medicineCode = 3;
+  string medicineName = 4;
+  int64 companyId = 5;
+}
+
+message ComStockMedicineBindListResp{
+  repeated ComStockMedicineBindListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ComStockMedicineBindListVo{
+  string medicineName = 1;
+  string medicineCode = 2;
+  string medicineLinkName = 3;
+  int64 bindId = 4;
+  string companyCode = 5;
+  //药品规格（如20mg,2ml:200ug）
+  string  medicineSpecification = 6;
+  string  manufacturer = 7;
+  //包装单位
+  string  medicineUnit = 8;
+  //剂型（如片剂）
+  string  medicineForm = 9;
+  //药品包装(如盒，支，瓶)
+  string  medicinePackage = 10;
+}
+
+message MiStockMedicineBindListReq{
+  Page page = 1;
+  int64 managerId = 2;
+  string medicineCode = 3;
+  string medicineName = 4;
+  int64 miId = 5;
+}
+
+message MiStockMedicineBindListResp{
+  repeated MiStockMedicineBindListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message MiStockMedicineBindListVo{
+  string medicineName = 1;
+  string medicineCode = 2;
+  string medicineLinkName = 3;
+  int64 bindId = 4;
+  string miCode = 5;
+  //药品规格（如20mg,2ml:200ug）
+  string  medicineSpecification = 6;
+  string  manufacturer = 7;
+  //包装单位
+  string  medicineUnit = 8;
+  //剂型（如片剂）
+  string  medicineForm = 9;
+  //药品包装(如盒，支，瓶)
+  string  medicinePackage = 10;
+}
+
+message ComStockMedicineBindReq{
+  int64 managerId = 1;
+  string medicineCode = 2;
+  string medicineName = 3;
+  string medicineLinkCode = 4;
+  int64 companyId = 5;
+  int64 bindId = 6;
+  string oldLinkCode = 7;
+}
+
+message ComStockMedicineBindResp{
+  int64 result = 1;
+}
+
+message MiStockMedicineBindReq{
+  int64 managerId = 1;
+  string medicineCode = 2;
+  string medicineName = 3;
+  string medicineLinkCode = 4;
+  int64 miId = 5;
+  int64 bindId = 6;
+  string oldLinkCode = 7;
+}
+
+message MiStockMedicineBindResp{
+  int64 result = 1;
+}
+
+message StockListReq{
+  Page page = 1;
+  int64 managerId = 2;
+  string contractNo = 3;
+  string medicineName = 4;
+  string medicineCode = 5;
+  int64 miId = 6;
+  int64 comId = 7;
+  google.protobuf.Timestamp startAt = 8;
+  google.protobuf.Timestamp endAt = 9;
+  string tenderCompany = 10;
+  string companyName = 11;
+  string companyCode = 12;
+  string miName = 13;
+  string miCode = 14;
+}
+
+message StockListResp{
+  repeated StockListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message StockListVo{
+  string medicineName = 1;
+  string medicineCode = 2;
+  string contractNo = 3;
+  string tenderCompany = 4;
+  string companyName = 5;
+  int32 comStockNum = 6;
+  string miName = 7;
+  int32 miStockNum = 8;
+  string medicineSpecification = 9;
+  google.protobuf.Timestamp contractStartAt = 10;
+  google.protobuf.Timestamp contractEndAt = 11;
+  google.protobuf.Timestamp comStockUpdatedAt = 12;
+  google.protobuf.Timestamp miStockUpdatedAt = 13;
+}
+
+message GetInfoHashReq {
+  int64 infoId = 1;
+  repeated string linkCodes = 2;
+  string linkType = 3;
+}
+
+message InfoHash {
+  int64 infoId = 1;
+  string linkCode = 2;
+  string linkType = 3;
+  string infoHash = 4;
+  google.protobuf.Timestamp infoUploadAt = 5;
+}
+
+message GetInfoHashRsp {
+  repeated InfoHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+// 库存service
+service StockService{
+  //库存数据上报
+  rpc StockSync(StockSyncReq) returns (StockSyncResp);
+  //配送企业药品绑定列表
+  rpc ComStockMedicineBindList(ComStockMedicineBindListReq) returns (ComStockMedicineBindListResp);
+  //配送企业绑定his药品code
+  rpc ComStockMedicineBind(ComStockMedicineBindReq) returns (ComStockMedicineBindResp);
+  //医疗机构药品绑定列表
+  rpc MiStockMedicineBindList(MiStockMedicineBindListReq) returns (MiStockMedicineBindListResp);
+  //医疗机构绑定his药品code
+  rpc MiStockMedicineBind(MiStockMedicineBindReq) returns (MiStockMedicineBindResp);
+  //库存列表展示
+  rpc StockList(StockListReq) returns (StockListResp);
+
+}
+
+//=========数据报表服务================
+service DataReportService {
+  //查询招采计划 日报数据
+  rpc GetShipmentPlanDayReports(GetShipmentPlanReportsReq) returns (GetShipmentPlanDayReportsResp);
+  //查询招采计划 月报数据
+  rpc GetShipmentPlanMonthReports(GetShipmentPlanReportsReq) returns (GetShipmentPlanMonthReportsResp);
+  //查询招采计划 年报数据
+  rpc GetShipmentPlanYearReports(GetShipmentPlanReportsReq) returns (GetShipmentPlanYearReportsResp);
+  //查询配送单 日报数据
+  rpc GetShipmentOrderDayReports(GetShipmentOrderReportsReq) returns (GetShipmentOrderDayReportsResp);
+  //查询配送单 月报数据
+  rpc GetShipmentOrderMonthReports(GetShipmentOrderReportsReq) returns (GetShipmentOrderMonthReportsResp);
+  //查询配送单 年报数据
+  rpc GetShipmentOrderYearReports(GetShipmentOrderReportsReq) returns (GetShipmentOrderYearReportsResp);
+  //查询保理订单 日报数据
+  rpc GetFactoringOrderDayReports(GetFactoringOrderReportsReq) returns (GetFactoringOrderDayReportsResp);
+  //查询保理订单 月报数据
+  rpc GetFactoringOrderMonthReports(GetFactoringOrderReportsReq) returns (GetFactoringOrderMonthReportsResp);
+  //查询保理订单 年报数据
+  rpc GetFactoringOrderYearReports(GetFactoringOrderReportsReq) returns (GetFactoringOrderYearReportsResp);
+  //查询合同信息 日报数据
+  rpc GetContractPlanDayReports(GetContractPlanReportsReq) returns (GetContractPlanDayReportsResp);
+  //查询合同信息 月报数据
+  rpc GetContractPlanMonthReports(GetContractPlanReportsReq) returns (GetContractPlanMonthReportsResp);
+  //查询合同信息 年报数据
+  rpc GetContractPlanYearReports(GetContractPlanReportsReq) returns (GetContractPlanYearReportsResp);
+  //查询所含条件的合同聚合数据
+  rpc GetContractSum(GetContractPlanReportsReq) returns (GetContractSumResp);
+  //查询某医保局下生效合同的统计数据
+  rpc GetValidContractInfo(GetValidContractInfoReq) returns (GetValidContractInfoResp);
+  //获取目前的待支付金额
+  rpc GetCurrentNeedPay(GetCurrentNeedPayReq) returns (GetCurrentNeedPayResp);
+  //获取目前的待审核保理金额
+  rpc GetCurrentFactoringApply(GetCurrentFactoringApplyReq) returns (GetCurrentFactoringApplyResp);
+}
+
+message GetFactoringAgreerefHashReq {
+  //谁在请求 按照搜索账号控制显示范围
+  int64 managerId = 1;
+  repeated int64 factoringAgreerefIds = 2;
+  repeated string agreerefs = 3;
+}
+
+message FactoringAgreerefHash{
+  int64 factoringAgreerefIds = 1;
+  string agreeref = 2;
+  string infoHash = 3;
+  google.protobuf.Timestamp infoUploadAt = 4;
+}
+message GetFactoringAgreerefHashResp {
+  repeated FactoringAgreerefHash list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+//=======业务hash节点管理========================
+service HashService {
+  //hash模块
+  rpc GetCompanyHash(GetCompanyHashReq) returns (GetCompanyHashResp);
+  rpc GetMiHash(GetMiHashReq) returns (GetMiHashResp);
+  rpc GetMedicineHash(GetMedicineReq) returns (GetMedicineResp);
+  rpc GetContractHash(GetContractHashReq) returns (GetContractHashResp);
+  rpc GetContractMiHash(GetContractMiHashReq) returns (GetContractMiHashResp);
+  rpc GetConfigHash(GetConfigHashReq) returns (GetConfigHashResp);
+  rpc GetShipmentPlanHash(GetShipmentPlanHashReq) returns (GetShipmentPlanHashResp);
+  rpc GetShipmentOrderHash(GetShipmentOrderHashReq) returns (GetShipmentOrderHashResp);
+  rpc GetShipmentPayHash(GetShipmentPayHashReq) returns (GetShipmentPayHashResp);
+  rpc GetShipmentFactoringHash(GetShipmentFactoringHashReq) returns (GetShipmentFactoringHashResp);
+
+  rpc GetMessageHash(ListMessageHashReq) returns (ListMessageHashResp);
+  rpc GetCommonInfoHash(GetInfoHashReq) returns (GetInfoHashRsp);
+  
+  rpc GetFactoringAgreerefHash(GetFactoringAgreerefHashReq) returns (GetFactoringAgreerefHashResp);
+}
+
+message ShipmentRankDataYearReq{
+  int64 year = 1;
+  int64 miId = 2;
+  Page page = 3;
+  int64 managerId = 4;
+}
+
+message ShipmentMedicineRankDataYearResp{
+  repeated ShipmentMedicineRankDataYearVo vo = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ShipmentMedicineRankDataYearVo{
+  string medicineName = 1;
+  int64  medicineNum = 2;
+}
+
+message ShipmentCompanyRankDataYearResp{
+  repeated ShipmentCompanyRankDataYearVo vo = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ShipmentCompanyRankDataYearVo{
+  string companyName = 1;
+  int64  amount = 2;
+}
+
+message GetShipmentLogisticsListReq{
+  int64 comId = 1;
+  int64 miId = 2;
+  Page page = 3;
+  int64 managerId = 4;
+}
+
+message GetShipmentLogisticsListResp{
+  repeated GetShipmentLogisticsListVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message GetShipmentLogisticsListVo{
+  string medicineName = 1;
+  string medicineCode = 2;
+  string shipmentStatus = 3;
+  google.protobuf.Timestamp  receiveDeadline = 4;
+}
+
+//============排名服务==================================
+service RankService {
+  // 医疗机构 带量采购排名前十药品
+  rpc GetShipmentMedicineRankDataYear(ShipmentRankDataYearReq) returns (ShipmentMedicineRankDataYearResp);
+  // 医疗机构 采购金额排名前十的医药企业
+  rpc GetShipmentCompanyRankDataYear(ShipmentRankDataYearReq) returns (ShipmentCompanyRankDataYearResp);
+  // 医疗机构 招采单物流信息
+  rpc GetShipmentLogisticsList(GetShipmentLogisticsListReq) returns (GetShipmentLogisticsListResp);
+
+  //MI端使用按年查询药品履约率排名
+  rpc GetShipmentRankMedicineDataYear(GetShipmentRankMedicineDataYearReq) returns (GetShipmentRankMedicineDataYearResp);
+  rpc GetShipmentRankCompanyDataYear(GetShipmentRankCompanyDataYearReq) returns (GetShipmentRankCompanyDataYearResp);
+  //MIB端使用
+  //查询医疗机构采购金额年度排名
+  rpc GetRankMiReceiveYear(GetRankMiReceiveYearReq) returns (GetRankMiReceiveYearResp);
+  //查询医药企业送达率 年度排名
+  rpc GetRankComReceiveYear(GetRankComReceiveYearReq) returns (GetRankComReceiveYearResp);
+  //查询医疗机构 主动支付率年度排名
+  rpc GetRankMiPaidYear(GetRankMiPaidYearReq) returns (GetRankMiPaidYearResp);
+  // 查询药品采购量年度排名
+  rpc GetRankMedicineYear(GetRankMedicineYearReq) returns (GetRankMedicineYearResp);
+  //  濮阳行政地图此时的数据
+  rpc GetMIBDashboardBaseInfo(GetMIBDashboardBaseInfoReq) returns (GetMIBDashboardBaseInfoResp);
+}
+
+//============ 月度报销服务 ==========================
+message ReimbursementListReq {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  string mibCode = 4;
+  int64 applyReport = 5;
+  int64 approvalReport = 6;
+  string payStatus = 7;
+  string approvalStatus = 8;
+  Page page = 9;
+  string insuranceType = 10;
+}
+
+message ReimbursementListRes{
+  repeated ReimbursementListBody list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ReimbursementListBody {
+  int64 year = 1;
+  int64 month = 2;
+  string mi = 3;
+  int64 applyAmount = 4;
+  int64 approvalAmount = 5;
+  int64 floatAmount = 6;
+  int64 fixedAmount = 7;
+  string approvalStatus = 8;
+  string payStatus = 9;
+  string payErrMsg = 10;
+  string bankAccount = 11;
+  string bankOrgName = 12;
+  string bankName = 13;
+  string approvalFile = 14;
+  string applyFile = 15;
+  google.protobuf.Timestamp paySuccessTime = 16;
+  string insuranceType = 18;
+  int64 fundAmount = 19;
+}
+
+message ReimbursementUpApplyFile {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  string mibCode = 4;
+  string file = 5;
+  int64 managerId = 6;
+  string insuranceType = 7;
+}
+
+message ReimbursementUpApprovalFile {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  string mibCode = 4;
+  string file = 5;
+  int64 managerId = 6;
+  string insuranceType = 7;
+}
+
+message StandardRes {
+  string code = 1;
+  string msg = 2;
+}
+
+message ReimbursementUpApprovalAmount {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  string mibCode = 4;
+  int64 amount = 5;
+  int64 managerId = 6;
+  string insuranceType = 7;
+  int64 fundAmount = 8;
+}
+
+message ReimbursementUpApplyAmount {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  int64 amount = 5;
+  int64 managerId = 6;
+  string insuranceType = 7;
+}
+
+message ReimbursementUpExpectApplyAmount {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  string mibCode = 4;
+  int64 fixedAmount = 5;
+  int64 floatAmount = 6;
+  int64 managerId = 7;
+  string insuranceType = 8;
+}
+
+message ReimbursementApproval {
+  int64 year = 1;
+  int64 month = 2;
+  string miCode = 3;
+  int64 managerId = 6;
+  string insuranceType = 7;
+}
+
+service ReimbursementSerivce {
+  //报销列表
+  rpc List(ReimbursementListReq) returns (ReimbursementListRes);
+  //保存审批报表
+  rpc UpApprovalFile(ReimbursementUpApprovalFile) returns (StandardRes);
+  //保存报销报表
+  rpc UpApplyFile(ReimbursementUpApplyFile) returns (StandardRes);
+  //设置医院端报销金额
+  rpc UpApplyAmount(ReimbursementUpApplyAmount) returns (StandardRes);
+  //设置审批金额
+  rpc UpApprovalAmount(ReimbursementUpApprovalAmount) returns (StandardRes);
+  //设置预期报销金额
+  rpc UpExpectApplyAmount(ReimbursementUpExpectApplyAmount) returns (StandardRes);
+  //审批报销数据
+  rpc Approval(ReimbursementApproval) returns (StandardRes);
+
+}
+
+// 获取 workDay
+message GetNextWorkDayReq {
+  google.protobuf.Timestamp date = 1;
+}
+
+message GetNextWorkDayRsp {
+  google.protobuf.Timestamp date = 1;
+}
+
+service MicroToolsService {
+  // 获取 workDay
+  rpc GetNextWorkDay(GetNextWorkDayReq) returns (GetNextWorkDayRsp);
+}
