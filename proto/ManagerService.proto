@@ -3314,3 +3314,289 @@ service MicroToolsService {
   // 获取 workDay
   rpc GetNextWorkDay(GetNextWorkDayReq) returns (GetNextWorkDayRsp);
 }
+
+
+// for vsc
+ 
+message ResultResp {
+  int64 result = 1;
+}
+
+message RPCCompetition {
+  int64  id = 1;
+  string name = 2;
+  string city = 3;
+  string memo = 4;
+  string cupUrl = 5;
+  string goldUrl = 6;
+  string province = 7;
+  string mascotUrl = 8;
+  string silverUrl = 9;
+  string bronzeUrl = 10;
+  string themeSong = 11;
+  string briefInfo = 12;
+  int64  createdBy = 13;
+  int64  updatedBy = 14;
+  string description = 15;
+  string activeStatus = 16;
+  google.protobuf.Timestamp endAt = 18;
+  google.protobuf.Timestamp startAt = 17;
+  google.protobuf.Timestamp createdAt = 19;
+  google.protobuf.Timestamp updatedAt = 20;
+  google.protobuf.Timestamp deletedAt = 21;
+  int64  managerId = 22;
+}
+
+message RPCCompetitionItem {
+  int64  id = 1;
+  string code = 2;
+  string name = 3;
+  string type = 4;
+  string memo = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp updatedAt = 7;
+  google.protobuf.Timestamp deletedAt = 8;
+  int64  managerId = 9;
+}
+
+message RPCListCompetitionItemReq {
+  repeated int64 ids = 1;
+  int64  id = 2;
+  string code = 3;
+  string name = 4;
+  string type = 5;
+  Page   page = 6;
+  int64  managerId = 7;
+}
+
+message RPCListCompetitionItemResp {
+  repeated RPCCompetitionItem list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message RPCCompetitionRegister {  
+  int64  id = 1;
+  string memo = 2;
+  int64  createdBy = 3;
+  int64  updatedBy = 4;
+  string activeStatus = 5;
+  int64  competitorId = 6;
+  string govenmentDesc = 7;
+  int64  competitionItemId = 8;
+  int64  competitorCoachId = 9;
+  google.protobuf.Timestamp createdAt = 11;
+  google.protobuf.Timestamp updatedAt = 12;
+  google.protobuf.Timestamp deletedAt = 13;
+  google.protobuf.Timestamp registerAt = 10;
+  int64  managerId = 14;
+}
+
+message RPCListCompetitionRegisterReq {
+  repeated int64 ids = 1;
+  int64  competitorId = 2;
+  int64  competitionItemId = 3;
+  int64  competitorCoachId = 4;
+  Page   page = 5;
+  int64  managerId = 6;
+}
+
+message RPCListCompetitionRegisterResp {
+  repeated RPCCompetitionRegister list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message RPCCompetitor {
+  int64  id = 1;
+  string sex = 2;
+  string code = 3;
+  string type = 4;
+  string name = 5;
+  string unit = 6;
+  string city = 7;
+  string zone = 8;
+  string memo = 9;
+  string phone = 10;
+  string nation = 11;
+  string idNumber = 12;
+  string photoUrl = 13;
+  string province = 14;
+  string vocation = 15;
+  string education = 16;
+  int64  createdBy = 17;
+  int64  updatedBy = 18;
+  string activeStatus = 19;
+  string personIdentity = 20;
+  string vocationDegree = 21;
+  int64  isPayInsurance = 22;
+  string politicalStatus = 23;
+  string backIdNumberUrl = 24;
+  string frontIdNumberUrl = 25;
+  string upperWorkwearModel = 26;
+  string pantsWorkwearModel = 27;
+  google.protobuf.Timestamp birthDate = 28;
+  google.protobuf.Timestamp createdAt = 29;
+  google.protobuf.Timestamp updatedAt = 30;
+  google.protobuf.Timestamp deletedAt = 31;
+  int64  managerId = 32;
+}
+
+message RPCListCompetitorReq {
+  repeated int64 ids = 1;
+  string type = 2;
+  string name = 3;
+  string sex = 4;
+  string city = 5;
+  string zone = 6;
+  string unit = 7;
+  string phone = 8;
+  string nation = 9;
+  string province = 10;
+  string idNumber = 11;
+  google.protobuf.Timestamp birthDateTo = 12;
+  google.protobuf.Timestamp birthDateFrom = 13;
+  Page   page = 14;
+  int64  managerId = 15;
+}
+
+message RPCListCompetitorResp {
+  repeated RPCCompetitor list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message RPCForgeItem {
+  int64  id = 1;
+  string code = 2;
+  string name = 3;
+  string type = 4;
+  string memo = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp updatedAt = 7;
+  google.protobuf.Timestamp deletedAt = 8;
+  int64  managerId = 9;
+}
+
+message RPCListForgeItemReq {
+  repeated int64 ids = 1;
+  string code = 2;
+  string name = 3;
+  string type = 4;
+  Page   page = 5;
+  int64  managerId = 6;
+}
+
+message RPCListForgeItemResp {
+  repeated RPCForgeItem list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message RPCForge {
+  int64  id = 1;
+  string memo = 2;
+  string title = 3;
+  int64  copies = 4;
+  string summary = 5;
+  string fileUrl = 6;
+  string fileMd5 = 7;
+  string copyright = 8;
+  int64  createdBy = 9;
+  int64  updatedBy = 10;
+  int64  forgeItemId = 11;
+  string description = 12;
+  int64  competitorId = 13;
+  string activeStatus = 14;
+  string shelvesStatus = 15;
+  int64  competitionItemId = 16;
+  google.protobuf.Timestamp createdAt = 17;
+  google.protobuf.Timestamp updatedAt = 18;
+  google.protobuf.Timestamp deletedAt = 19;
+  int64  managerId = 20;
+}
+
+message RPCListForgeReq {
+  repeated int64 ids = 1;
+  string title = 2;
+  int64  forgeItemId = 3;
+  string activeStatus = 4;
+  string shelvesStatus = 5;
+  string competitorName = 6;
+  string competitorPhone = 7;
+  string competitorIdNumber = 8;
+  string competitionItemType = 9;
+  string competitionItemName = 10;
+  Page   page = 11;
+  int64  managerId = 12;
+}
+
+message RPCForgeVo {
+  int64  id = 1;
+  string memo = 2;
+  string title = 3;
+  int64  copies = 4;
+  string summary = 5;
+  string fileUrl = 6;
+  string fileMd5 = 7;
+  string copyright = 8;
+  int64  createdBy = 9;
+  int64  updatedBy = 10;
+  int64  forgeItemId = 11;
+  string description = 12;
+  string activeStatus = 13;
+  string shelvesStatus = 14;
+  int64  competitorId = 15;
+  string competitorName = 16;
+  string competitorPhone = 17;
+  string competitorIdNumber = 18;
+  int64  competitionItemId = 19;
+  string competitionItemType = 20;
+  string competitionItemName = 21;
+  google.protobuf.Timestamp createdAt = 22;
+  google.protobuf.Timestamp updatedAt = 23;
+  google.protobuf.Timestamp deletedAt = 24;
+}
+
+message RPCListForgeResp {
+  repeated RPCForgeVo list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+service VSCService {
+  rpc CreateOneCompetition(RPCCompetition) returns (ResultResp);
+  rpc UpdateOneCompetition(RPCCompetition) returns (ResultResp);
+  rpc DeleteOneCompetition(RPCCompetition) returns (ResultResp);
+  rpc GetCompetition(RPCCompetition) returns (RPCCompetition);
+  
+  rpc CreateOneCompetitionItem(RPCCompetitionItem) returns (ResultResp);
+  rpc UpdateOneCompetitionItem(RPCCompetitionItem) returns (ResultResp);
+  rpc DeleteOneCompetitionItem(RPCCompetitionItem) returns (ResultResp);
+  rpc ListCompetitionItem(RPCListCompetitionItemReq) returns (RPCListCompetitionItemResp);
+  
+  rpc CreateOneCompetitionRegister(RPCCompetitionRegister) returns (ResultResp);
+  rpc UpdateOneCompetitionRegister(RPCCompetitionRegister) returns (ResultResp);
+  rpc DeleteOneCompetitionRegister(RPCCompetitionRegister) returns (ResultResp);
+  rpc ListCompetitionRegister(RPCListCompetitionRegisterReq) returns (RPCListCompetitionRegisterResp);
+  
+  rpc CreateOneCompetitor(RPCCompetitor) returns (ResultResp);
+  rpc UpdateOneCompetitor(RPCCompetitor) returns (ResultResp);
+  rpc DeleteOneCompetitor(RPCCompetitor) returns (ResultResp);
+  rpc ListCompetitor(RPCListCompetitorReq) returns (RPCListCompetitorResp);
+  
+  rpc CreateOneForgeItem(RPCForgeItem) returns (ResultResp);
+  rpc UpdateOneForgeItem(RPCForgeItem) returns (ResultResp);
+  rpc DeleteOneForgeItem(RPCForgeItem) returns (ResultResp);
+  rpc ListForgeItem(RPCListForgeItemReq) returns (RPCListForgeItemResp);
+  
+  rpc CreateOneForge(RPCForge) returns (ResultResp);
+  rpc UpdateOneForge(RPCForge) returns (ResultResp);
+  rpc DeleteOneForge(RPCForge) returns (ResultResp);
+  rpc ListForge(RPCListForgeReq) returns (RPCListForgeResp);
+}
