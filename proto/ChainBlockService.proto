@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package ChainBlockService;
+option go_package = "service/ChainBlockService;ChainBlockService";
+
+import public "google/protobuf/timestamp.proto";
+import public "google/protobuf/any.proto";
+
+message Page {
+  int64 pageNumber = 1;
+  int64 pageSize = 2;
+}
+
+message GetChainTransactionInfoReq {
+  string  hashValue = 1;
+  int64 managerId = 2;
+  string operateType = 3;
+}
+
+message GetChainTransactionInfoResp {
+  string  transactionDetails = 1;
+}
+
+message GetTxHashInfoReq {
+  string  hashValue = 1;
+  int64 managerId = 2;
+  string businessType  = 3;
+}
+
+message GetTxHashInfoResp {
+  string  currentHash = 1;
+  string  data = 2;
+  string  description = 3;
+  string  lastHash = 4;
+  string  uploadNode = 5;
+  int64  uploadSuccessAt = 6;
+  string  uploaderAccount = 7;
+  string  uploaderName = 8;
+  string  uploaderRole = 9;
+  string  uploaderRoleName = 10;
+}
+
+message GetMaxBlockNumberReq {
+  int64 managerId = 1;
+  string businessType  = 2;
+}
+
+message GetMaxBlockNumberResp {
+  string  maxBlockNumber = 1;
+}
+
+service ChainBlockService {
+  rpc GetTransactionHash(GetChainTransactionInfoReq) returns(GetChainTransactionInfoResp);
+  rpc GetTxHashInfoByBusinessType(GetTxHashInfoReq) returns(GetTxHashInfoResp);
+  rpc GetMaxBlockNumber(GetMaxBlockNumberReq) returns(GetMaxBlockNumberResp);
+}
+
