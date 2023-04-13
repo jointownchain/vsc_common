@@ -7,96 +7,13 @@ option go_package = "service/BcAndBankService;BcAndBankService";
 
 import public "google/protobuf/timestamp.proto";
 
-
-
 service BcAndBankService {
-  // --------单纯上链接口 start---------
-  // 通用上链info
-  rpc BcUploadInfo(UploadChainInfo) returns (BcResponse);
-  // 上链 configs 信息
-  rpc BcUploadConfigs(UploadChainConfigs) returns (BcResponses);
-  // 上链 企业信息
-  rpc BcUploadCompanies(UploadChainCompanies) returns (BcResponses);
-  // 医疗机构上链
-  rpc BcUploadMis(UploadChainMis) returns (BcResponses);
-  // 药品信息上链
-  rpc BcUploadMedicine(UploadChainMedicines) returns (BcResponses);
-  // 合同信息上链
-  rpc BcUploadContracts(UploadChainContracts) returns (BcResponses);
-  // 子合同信息上链
-  rpc BcUploadContractMis(UploadChainContractMis) returns (BcResponses);
-  // 配送计划上链
-  rpc BcUploadShipments(UploadChainShipments) returns (BcResponses);
-  // 配送单上链
-  rpc BcUploadShipmentOrders(UploadChainShipmentOrders) returns (BcResponses);
-  // 支付单上链, 确权
-  rpc BcUploadPayOrders(UploadChainPayOrders) returns (BcResponses);
-  // 保理单上链（更新）
-  rpc BcUploadFactoringOrders(UploadChainFactoringOrders) returns (BcResponses);
-  // 银行要求发消息上链
-  rpc BcUploadChainMessage(UploadChainMsgReq) returns (BcResponses);
-  // 保理协议号上链
-  rpc BcUploadFactoringAgreerefs(UploadFactoringAgreerefs) returns (BcResponses);
-  // --------单纯上链接口 end---------
-
-  // --------上链 + 银行 组合接口 start---------
-  // 发起付款 一笔付款单内可以包含多笔 支付单(接收参数: 多笔 payOrder + 一个 银行请求)
-  // 查所有的支付单, 看是否符合要求
-  // 返回:: 链上数据hash集合 加 银行返回
-  rpc BcAndBankPayOrderAction(BcAndBankPayOrderActionRequest) returns (BcAndBankActionResp);
-
-  // 发起保理(多笔支付单)
-  // 保理单上链, 支付单上链后才上链, 查所有的支付单: 确认 支付单 处于 待支付/失败/(私有状态 未保理) 中; 调银行
-  rpc BcAndBankFactoringOrdersAction(BcAndBankFactoringActionRequest) returns (BcAndBankActionResp);
-
-  // 发起保理还款(以保理单为准)
-  // 查保理单, 处于 已保理 状态 ->
-  rpc BcAndBankFactoringRepayAction(BcAndBankFactoringRepayActionRequest) returns (BcAndBankActionResp);
-  // --------上链 + 银行 组合接口 end---------
-
-  // --------危险动作: 强制上链接口 start---------
-  // 强制配送计划上链
-  rpc BcForceUploadShipments(UploadChainShipments) returns (BcResponses);
-  // 强制配送单上链
-  rpc BcForceUploadShipmentOrders(UploadChainShipmentOrders) returns (BcResponses);
-  // 强制支付单上链
-  rpc BcForceUploadPayOrders(UploadChainPayOrders) returns (BcResponses);
-  // 强制Factoring上链
-  rpc BcForceUploadFactoring(UploadChainFactoringOrders) returns (BcResponses);
-  // --------危险动作: 强制上链接口 end---------
-
   // 根据 txID 查询 链上交易, 返回 解密后的 json.Marshal 字符串
   rpc BcQueryByTxID(QueryTxIDReq) returns (QueryTxIDRsp);
+  
+  //铸造上链
+  rpc BcUploadForge(UploadChainForges) returns (BcResponses); 
 }
-
-// 通用上链info
-message UploadChainInfo {
-  UploadChainType uploadChainType = 1;
-  string content = 2;
-  string extend = 3;
-}
-
-message UploadChainMsg {
-  UploadChainType uploadChainType = 1;
-  int64 toUserId = 2;
-  string toUsername = 3;
-  int64 toOrganizationId = 4;
-  string toOrganizationName = 5;
-  int64 linkId = 6;
-  string linkCode = 7;
-  string businessKey = 8;
-  string businessPermission = 9;
-  string title = 10;
-  string content = 11;
-  //暂时无用。以后消息已读也要上链时使用
-  string readStatus = 12;
-  google.protobuf.Timestamp readAt = 13;
-}
-
-message UploadChainMsgReq {
-  repeated UploadChainMsg messages = 1;
-}
-
 
 message QueryTxIDReq {
   string TxID = 1;
@@ -108,41 +25,6 @@ message QueryTxIDRsp {
   google.protobuf.Timestamp CreateAt = 2;
 }
 
-message BcAndBankPayOrderActionRequest {
-  repeated UploadChainPayOrder payOrder = 1;
-  BankRequest bankRequest = 2;
-  bool debug = 3;
-}
-
-message BcAndBankFactoringActionRequest {
-  UploadChainFactoringOrder factoringOrder = 1;
-  BankRequest bankRequest = 2;
-}
-
-message BcAndBankFactoringRepayActionRequest {
-  UploadChainFactoringOrder repay = 1;
-  BankRequest bankRequest = 2;
-}
-
-message BcAndBankActionResp {
-  repeated BcResponse bcResponse = 1; // string hash
-  BankResponse bankResponse = 2; // xml marshal
-}
-
-// 银行相关参数
-// 银行参数基于 XML, 对应的 struct 中有很多标签和无用字段, 使用 xml.Marshal 传 string
-message BankRequest {
-  // 请求体 xml.marshal
-  string body = 1;
-  // 请求方法 <- 按照 bankSDK 内定义的 constant opts 来
-  string function = 2;
-  bool skipBank = 3;
-}
-
-// 通用银行信息返回(返回对应结构体 xml marshal)
-message BankResponse {
-  string body = 1;
-}
 
 // 通用单个上链信息返回(hash)
 message BcResponse {
@@ -152,24 +34,6 @@ message BcResponse {
 // 通用上链信息返回(hashs)
 message BcResponses {
   repeated string hash = 1;
-}
-
-// 通用聚合返回(hash, 银行)
-message CommonResponse {
-  BankResponse bankRsp = 1;
-  // 可能会返回多个 hash
-  repeated BcResponse bcRsp = 2;
-}
-
-// dto/UploadChain.go generated
-// base -------------- start
-message BankAccount {
-  string cardNo = 1;
-  string accountType = 2;
-  string bank = 3;
-  string toibkn = 4;
-  string cardOwner = 5;
-  string validStatus = 6;
 }
 
 message UploadChainType {
@@ -182,206 +46,29 @@ message UploadChainType {
 }
 // base -------------- end
 
+// message UploadDocumentInfo {
+//   string fileName = 1;
+//   string uploadUrl = 2;
+// }
 
-message PayOrder {
-  string shipmentNo = 1;
+message UploadChainForges {
+   repeated UploadChainForge uploadChainForge = 1;
 }
 
-message UploadChainCompany {
+message UploadChainForge {
   UploadChainType uploadChainType = 1;
-  string companyName = 2;
-  string companyCode = 3;
-  string managerName = 4;
-  string managerPhone = 5;
-  string mibCode = 6;
-  int64 creditAmount = 7;
-  google.protobuf.Timestamp startAt = 8;
-  google.protobuf.Timestamp endAt = 9;
-  BankAccount bankAccount = 10;
-  string creditRate = 11;
+  string title = 2;
+  string fileUrl = 3;
+  string fileMd5 = 4;  
+  int64 competitionItemId = 5;
+  int64 competitorId = 6;
+  int64 forgeItemId = 7;
+  string summary = 8;
+  string description = 9;
+  string  copies = 10;
+  string  copyright = 11;
+  string shelvesStatus = 12;
+  google.protobuf.Timestamp shelvesAt = 13;
+  string memo = 14;  
+  // repeated UploadDocumentInfo uploadDocument = 15;
 }
-
-message UploadChainCompanies {
-  repeated UploadChainCompany uploadChainCompany = 1;
-}
-
-message UploadChainConfig {
-  UploadChainType uploadChainType = 1;
-  string key = 2;
-  string typeOne = 3;
-  string typeTwo = 4;
-  string typeThree = 5;
-  string value = 6;
-  google.protobuf.Timestamp startAt = 7;
-  google.protobuf.Timestamp endAt = 8;
-  string explain = 9;
-}
-
-message UploadChainConfigs {
-  repeated UploadChainConfig uploadChainConfig = 1;
-}
-
-message UploadChainContract {
-  UploadChainType uploadChainType = 1;
-  string contractNo = 2;
-  string tenderCompany = 3;
-  string medicineCode = 4;
-  string medicinePCode = 5;
-  string companyCode = 6;
-  string mibCode = 7;
-  int64 medicinePrice = 8;
-  int64 totalAmount = 9;
-  google.protobuf.Timestamp startAt = 10;
-  google.protobuf.Timestamp endAt = 11;
-  string contractActivate = 12; // 合同激活状态
-}
-
-message UploadChainContracts {
-  repeated UploadChainContract uploadChainContract = 1;
-}
-
-message UploadChainContractMi {
-  UploadChainType uploadChainType = 1;
-  string contractNo = 2;
-  string miCode = 3;
-  int64 medicineAmount = 4;
-  string contractMd5 = 5;
-  string contractUrl = 6;
-  string contractActivate = 7; // 合同激活状态
-}
-
-message UploadChainContractMis {
-  repeated UploadChainContractMi uploadChainContractMi = 1;
-}
-
-message UploadChainFactoringOrder {
-  UploadChainType uploadChainType = 1;
-  repeated PayOrder payOrders = 2;
-  string companyCode = 3;
-  int64 factoringMoney = 4;
-  string factoringOrderNo = 5;
-  google.protobuf.Timestamp applyDate = 6;
-  google.protobuf.Timestamp applyAt = 7;
-  google.protobuf.Timestamp refundDate = 8;
-  string factoringBankNo = 9;
-  int64 actualReceiveMoney = 10;
-  string factoringStatus = 11;
-  google.protobuf.Timestamp refundAt = 12;
-  string refundStatus = 13;
-  string creditRate = 14;
-  google.protobuf.Timestamp applyResultAt = 15;
-}
-
-message UploadChainFactoringOrders {
-  repeated UploadChainFactoringOrder uploadChainFactoringOrder = 1;
-}
-
-message UploadChainMedicine {
-  UploadChainType uploadChainType = 1;
-  string medicineName = 2;
-  string medicineCode = 3;
-  string medicinePCode = 4;
-  string medicineSpecification = 5;
-  string medicineForm = 6;
-  string medicinePackage = 7;
-  string medicineUnit = 8;
-  int64 calculateRate = 9;
-  string manufacturer = 10;
-}
-
-message UploadChainMedicines {
-  repeated UploadChainMedicine uploadChainMedicine = 1;
-}
-
-message UploadChainMi {
-  UploadChainType uploadChainType = 1;
-  string mibCode = 2;
-  string miName = 3;
-  string miCode = 4;
-  string miType = 5;
-  string managerName = 6;
-  string managerPhone = 7;
-  int64 limitBalance = 8;
-  BankAccount specialAccount = 9;
-  BankAccount normalAccount = 10;
-}
-
-message UploadChainMis {
-  repeated UploadChainMi uploadChainMi = 1;
-}
-
-message UploadChainPayOrder {
-  UploadChainType uploadChainType = 1;
-  string shipmentNo = 2;
-  int64 orderAmount = 3;
-  string miCode = 4;
-  string companyCode = 5;
-  string outTradeNo = 6;
-  string payType = 7;
-  google.protobuf.Timestamp payAt = 8;
-  string payStatus = 9;
-  string factoringStatus = 10;
-}
-
-message UploadChainPayOrders {
-  repeated UploadChainPayOrder uploadChainPayOrder = 1;
-}
-
-message UploadChainShipment {
-  UploadChainType uploadChainType = 1;
-  string tpOrderNo = 2;
-  string orderNo = 3;
-  string tpCode = 4;
-  string mibCode = 5;
-  int64 shipmentAmount = 6;
-  int64 orderAmount = 7;
-  string contractNo = 8;
-  string miCode = 9;
-  string medicineCode = 10;
-  string medicinePCode = 11;
-  string companyCode = 12;
-  google.protobuf.Timestamp syncAt = 13;
-}
-
-message UploadChainShipments {
-  repeated UploadChainShipment uploadChainShipment = 1;
-}
-
-message UploadChainShipmentOrder {
-  UploadChainType uploadChainType = 1;
-  repeated UploadChainShipment plans = 2;
-  string shipmentNo = 3;
-  string invoiceMd5 = 4;
-  string invoiceUrl = 5;
-  string invoiceType = 6;
-  int64 invoiceTotal = 7;
-  int64 invoiceTax = 8;
-  string invoiceCheckCode = 9;
-  string invoiceNo = 10;
-  string invoiceCode = 11;
-  google.protobuf.Timestamp invoiceDate = 12;
-  google.protobuf.Timestamp sendOutAt = 13;
-  string shipmentCode = 14;
-  string shipmentCompany = 15;
-  string shipmentStatus = 16;
-  google.protobuf.Timestamp receiveAt = 17;
-  google.protobuf.Timestamp confirmAt = 18;
-}
-
-message UploadChainShipmentOrders {
-  repeated UploadChainShipmentOrder uploadChainShipmentOrder = 1;
-}
-
-message UploadFactoringAgreeref {
-  UploadChainType uploadChainType = 1;
-  string mibCode = 2;
-  string companyCode = 3;
-  string miCode = 4;
-  string agreeref = 5;
-}
-
-message UploadFactoringAgreerefs {
-  repeated UploadFactoringAgreeref uploadFactoringAgreeref = 1;
-}
-
-
