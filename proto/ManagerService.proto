@@ -3505,19 +3505,20 @@ message RPCForge {
   string summary = 5;
   string fileUrl = 6;
   string fileMd5 = 7;
-  string copyright = 8;
-  int64  createdBy = 9;
-  int64  updatedBy = 10;
-  int64  forgeItemId = 11;
-  string description = 12;
-  int64  competitorId = 13;
-  string activeStatus = 14;
-  string shelvesStatus = 15;
-  int64  competitionItemId = 16;
-  google.protobuf.Timestamp createdAt = 17;
-  google.protobuf.Timestamp updatedAt = 18;
-  google.protobuf.Timestamp deletedAt = 19;
-  int64  managerId = 20;
+  string infoHash = 8;
+  string copyright = 9;
+  int64  createdBy = 10;
+  int64  updatedBy = 11;
+  int64  forgeItemId = 12;
+  string description = 13;
+  int64  competitorId = 14;
+  string activeStatus = 15;
+  string shelvesStatus = 16;
+  int64  competitionItemId = 17;
+  google.protobuf.Timestamp createdAt = 18;
+  google.protobuf.Timestamp updatedAt = 19;
+  google.protobuf.Timestamp deletedAt = 20;
+  int64  managerId = 21;
 }
 
 message RPCListForgeReq {
@@ -3546,20 +3547,26 @@ message RPCForgeVo {
   string copyright = 8;
   int64  createdBy = 9;
   int64  updatedBy = 10;
-  int64  forgeItemId = 11;
-  string description = 12;
-  string activeStatus = 13;
-  string shelvesStatus = 14;
-  int64  competitorId = 15;
-  string competitorName = 16;
-  string competitorPhone = 17;
-  string competitorIdNumber = 18;
-  int64  competitionItemId = 19;
-  string competitionItemType = 20;
-  string competitionItemName = 21;
-  google.protobuf.Timestamp createdAt = 22;
-  google.protobuf.Timestamp updatedAt = 23;
-  google.protobuf.Timestamp deletedAt = 24;
+  string description = 11;
+  string activeStatus = 12;
+  string shelvesStatus = 13;
+  int64  forgeItemId = 14;
+  string forgeItemCode = 15;
+  string forgeItemName = 16;
+  string forgeItemType = 17;
+  int64  competitorId = 18;
+  string competitorName = 19;
+  string competitorPhone = 20;
+  string competitorIdNumber = 21;
+  int64  competitionItemId = 22;
+  string competitionItemType = 23;
+  string competitionItemName = 24;
+  string infoMsg = 25;
+  string infoHash = 26;
+  google.protobuf.Timestamp infoUploadAt = 27;
+  google.protobuf.Timestamp createdAt = 28;
+  google.protobuf.Timestamp updatedAt = 29;
+  google.protobuf.Timestamp deletedAt = 30;
 }
 
 message RPCListForgeResp {
@@ -3595,6 +3602,7 @@ service VSCService {
   rpc DeleteOneForgeItem(RPCForgeItem) returns (ResultResp);
   rpc ListForgeItem(RPCListForgeItemReq) returns (RPCListForgeItemResp);
   
+  rpc CreateForgeHash(RPCForge) returns (ResultResp);
   rpc CreateOneForge(RPCForge) returns (ResultResp);
   rpc UpdateOneForge(RPCForge) returns (ResultResp);
   rpc DeleteOneForge(RPCForge) returns (ResultResp);
