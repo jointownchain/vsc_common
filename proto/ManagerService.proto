@@ -3564,9 +3564,10 @@ message RPCForgeVo {
   string infoMsg = 25;
   string infoHash = 26;
   google.protobuf.Timestamp infoUploadAt = 27;
-  google.protobuf.Timestamp createdAt = 28;
-  google.protobuf.Timestamp updatedAt = 29;
-  google.protobuf.Timestamp deletedAt = 30;
+  google.protobuf.Timestamp shelvesAt = 28;
+  google.protobuf.Timestamp createdAt = 29;
+  google.protobuf.Timestamp updatedAt = 30;
+  google.protobuf.Timestamp deletedAt = 31;
 }
 
 message RPCListForgeResp {
