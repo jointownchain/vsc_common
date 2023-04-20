@@ -3532,8 +3532,12 @@ message RPCListForgeReq {
   string competitorIdNumber = 8;
   string competitionItemType = 9;
   string competitionItemName = 10;
-  Page   page = 11;
-  int64  managerId = 12;
+  google.protobuf.Timestamp createdTimeFrom = 11;
+  google.protobuf.Timestamp createdTimeTo = 12;
+  google.protobuf.Timestamp uploadedChainTimeFrom = 13;
+  google.protobuf.Timestamp uploadedChainTimeTo = 14;
+  Page   page = 15;
+  int64  managerId = 16;
 }
 
 message RPCForgeVo {
