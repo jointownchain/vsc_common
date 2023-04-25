@@ -139,6 +139,7 @@ message UserDetail {
   string roleName = 11;
   string activeStatus = 12;
   string accountStatus = 13;
+  string idNumber = 14;
 }
 
 message ListRoleReq {
