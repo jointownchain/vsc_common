@@ -68,6 +68,22 @@ message CreateUserResp {
   int64 userId = 1;
 }
 
+message RegistUserReq {
+  string username = 1;
+  string userPhone = 2;
+  string password = 3;
+  string role = 4;
+  string nickname = 5;
+  int64 organizationId = 6;
+  string accountStatus = 7;
+  string IdNumber = 8;
+  string email = 9;
+}
+
+message RegistUserResp {
+  string password = 1;
+}
+
 message UpdateUserReq {
   int64 userId = 1;
   string userPhone = 2;
@@ -99,6 +115,7 @@ message ListUserReq {
   string accountStatus = 11;
   string activeStatus = 12;
   string userPhone = 13;
+  int64 userType = 14;
 }
 
 message ListUserResp {
@@ -335,6 +352,7 @@ service UserService {
   rpc BindOauthPermission(BindOauthPermissionReq) returns (OauthTokenResp);
 
   rpc CreateUser(CreateUserReq) returns (CreateUserResp);
+  rpc RegistUser(RegistUserReq) returns (RegistUserResp);
   rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp);
   rpc ListUser(ListUserReq) returns (ListUserResp);
   rpc ListRole(ListRoleReq) returns (ListRoleResp);
