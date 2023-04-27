@@ -19,6 +19,7 @@ var (
 	SendSmsIllegalRegion  = add(10111) // 目前短信发送尚不支持此地区
 	InvalidEmailSender    = add(10130) // 不存在的发送邮箱
 
+	UserPending          = New(10200) // 用户待审核
 	UserBlocked          = New(10201) // 用户被封禁
 	UserNameDuplicate    = add(10202) // 重复的用户
 	UserNameFormatErr    = New(10203) // 用户名不合法

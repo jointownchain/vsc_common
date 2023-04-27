@@ -30,6 +30,7 @@ var CM = map[int]map[string]string{
 	10111: {"EN": "sms service current not support this region", "CN": "目前短信发送尚不支持此地区"},
 	10130: {"EN": "invalid email sender", "CN": "不存在的发送邮箱"},
 
+	10200: {"EN": "pending approval", "CN": "用户待审核"},
 	10201: {"EN": "frozen user", "CN": "用户被封禁"},
 	10202: {"EN": "duplicate user", "CN": "重复的用户"},
 	10203: {"EN": "illegal username", "CN": "用户名不合法"},
