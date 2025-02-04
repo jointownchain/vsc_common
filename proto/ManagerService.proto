@@ -3613,3 +3613,252 @@ service VSCService {
   rpc DeleteOneForge(RPCForge) returns (ResultResp);
   rpc ListForge(RPCListForgeReq) returns (RPCListForgeResp);
 }
+
+// for nfc
+
+message NfcProduct {
+  int64  id = 1;
+  string productCode = 2;
+  string productName = 3;
+  string productModel = 4;
+  string serialNumber = 5;
+  string setupTime = 6;
+  string installationplaceProv = 7;
+  string installationplaceCity = 8;
+  string installationplaceDist = 9;
+  string warrantyTime = 10;
+  string memo = 11;
+  int64  userId = 12;
+  string productType = 13;
+  int64  creator = 14;
+  int64  updator = 15;
+  google.protobuf.Timestamp createdAt = 16;
+  google.protobuf.Timestamp updatedAt = 17;
+  string zjbCode = 18;
+  string dcfCode = 19;
+  string jrqCode = 20;
+  string fpfCode = 21;
+  string qxqCode = 22;
+  string hgzCode = 23;
+  string zqzzCode = 24;
+  string qrCode = 25;
+  string orderNo = 26;
+  string bzgCode = 27;
+  string chuchouCode = 28;
+  string peijianCode = 29;
+  string manualCode = 30;
+  string remotecontrolCode = 31;
+  string mainboardCode = 32;
+  string palletNumber = 33;
+  string czsbCode = 34;
+  string cjCode = 35;
+  string glqCode = 36;
+  string lwgCode = 37;
+  string szsbCode = 38;
+  string tcCode = 39;
+  string zgCode = 40;
+}
+
+message NfcProductBill {
+  int64  id = 1;
+  int64  userId = 2;
+  string productCode = 3;
+  string imageUrl = 4;
+  int64  isDisplayed = 5;
+  int64  creator = 6;
+  google.protobuf.Timestamp createdAt = 7;
+}
+
+message NfcRegion {
+  int64  id = 1;
+  string regionCode = 2;
+  string regionName = 3;
+  string parentCode = 4;
+  int64  regionLevel = 5;
+  int64  isHidden = 6;
+  string shortName = 7;
+  string remark = 8;
+  int64  isHot = 9;
+}
+
+message NfcUser {
+  int64  id = 1;
+  string productCode = 2;
+  string phone = 3;
+  string nickName = 4;
+  string unionId = 5;
+  string openId = 6;
+  string avatar = 7;
+  string localAvatar = 8;
+  string wechatNum = 9;
+  int64  userType = 10;
+  google.protobuf.Timestamp createdAt = 11;
+  google.protobuf.Timestamp updatedAt = 12;
+  string memo = 13;
+  string password = 14;
+  string passwordSalt = 15;
+}
+
+message NfcSms {
+  int64  id = 1;
+  string productCode = 2;
+  int64  smsType = 3;
+  string phone = 4;
+  string verificationCode = 5;
+  string smsContent = 6;
+  int64  sendStatus = 7;
+  string memo = 8;
+  google.protobuf.Timestamp createdAt = 9;
+}
+
+message NfcProductVo {
+  int64  id = 1;
+  string productCode = 2;
+  string productName = 3;
+  string productModel = 4;
+  string serialNumber = 5;
+  string setupTime = 6;
+  string installationplaceProv = 7;
+  string installationplaceCity = 8;
+  string installationplaceDist = 9;
+  string warrantyTime = 10;
+  string memo = 11;
+  int64  userId = 12;
+  string productType = 13;
+  int64  creator = 14;
+  int64  updator = 15;
+  google.protobuf.Timestamp createdAt = 16;
+  google.protobuf.Timestamp updatedAt = 17;
+  string zjbCode = 18;
+  string dcfCode = 19;
+  string jrqCode = 20;
+  string fpfCode = 21;
+  string qxqCode = 22;
+  string hgzCode = 23;
+  string zqzzCode = 24;
+  string qrCode = 25;
+  string orderNo = 26;
+  string bzgCode = 27;
+  string chuchouCode = 28;
+  string peijianCode = 29;
+  string manualCode = 30;
+  string remotecontrolCode = 31;
+  string mainboardCode = 32;
+  string palletNumber = 33;
+  string czsbCode = 34;
+  string cjCode = 35;
+  string glqCode = 36;
+  string lwgCode = 37;
+  string szsbCode = 38;
+  string tcCode = 39;
+  string zgCode = 40;
+  string userPhone = 41;
+}
+
+message NfcProductsReq {
+  repeated NfcProduct list = 1;
+  int64  managerId = 2;
+}
+
+message NfcProductReq {
+  NfcProduct product = 1;
+  int64  managerId = 2;
+}
+
+message NfcProductDetailResp {
+  NfcProduct product = 1;
+  string installationPlace = 2;
+  repeated NfcProductBill billList = 3;
+}
+
+message NfcProductAndBillReq {
+  NfcProductVo productVo = 1;
+  repeated NfcProductBill billList = 2;
+  int64  managerId = 3;
+}
+
+message ListNfcProductVoReq {
+  NfcProductVo productVo = 1;
+  int64  managerId = 2;
+}
+
+message ListNfcProductResp {
+  repeated NfcProduct list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message NfcProductDto {
+  NfcProduct product = 1;
+  repeated NfcUser user = 2;
+  repeated NfcProductBill billList = 3;
+}
+
+message ListNfcProductDtoResp {
+  repeated NfcProductDto list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message ListRegionVoReq {
+  NfcRegion region = 1;
+  string productCode = 2;
+  int64  managerId = 3;
+}
+
+message ListNfcRegionResp {
+  repeated NfcRegion list = 1;
+}
+
+message NfcSmsReq {
+  NfcSms sms = 1;
+  int64  managerId = 2;
+}
+
+message ListSmsReq {
+  NfcSms sms = 1;
+  int64  managerId = 2;
+}
+
+message ListSmsResp {
+  repeated NfcSms list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+message NfcUserReq {
+  NfcUser user = 1;
+  int64  managerId = 2;
+}
+
+message ListUserReq {
+  NfcUser user = 1;
+  int64  managerId = 2;
+}
+
+message ListUserResp {
+  repeated NfcUser list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
+}
+
+service NfcService {
+  rpc CreateNfcProducts(NfcProductsReq) returns (ResultResp);
+  rpc UpdateNfcProduct(NfcProductReq) returns (ResultResp);
+  rpc GetNfcProductDetail(NfcProductReq) returns (NfcProductDetailResp);
+  rpc UpdateNfcProductAndBill(NfcProductAndBillReq) returns (ResultResp);
+  rpc ListNfcProduct(ListNfcProductVoReq) returns(ListNfcProductResp);
+  rpc ListNfcProductDto(ListNfcProductVoReq) returns(ListNfcProductDtoResp);
+  
+  rpc ListNfcRegion(ListRegionVoReq) returns(ListNfcRegionResp);
+  
+  rpc CreateNfcSms(NfcSmsReq) returns (ResultResp);
+  rpc ListNfcSms(ListSmsReq) returns (ListSmsResp);
+  
+  rpc CreateNfcUser(NfcUserReq) returns (ResultResp);
+  rpc ListNfcUser(ListUserReq) returns (ListUserResp);
+}
