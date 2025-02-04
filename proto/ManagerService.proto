@@ -3639,7 +3639,7 @@ message NfcProduct {
   string jrqCode = 20;
   string fpfCode = 21;
   string qxqCode = 22;
-  string hgzCode = 23;
+  string hgzzCode = 23;
   string zqzzCode = 24;
   string qrCode = 25;
   string orderNo = 26;
@@ -3734,7 +3734,7 @@ message NfcProductVo {
   string jrqCode = 20;
   string fpfCode = 21;
   string qxqCode = 22;
-  string hgzCode = 23;
+  string hgzzCode = 23;
   string zqzzCode = 24;
   string qrCode = 25;
   string orderNo = 26;
