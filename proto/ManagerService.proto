@@ -3753,6 +3753,10 @@ message NfcProductVo {
   string tcCode = 39;
   string zgCode = 40;
   string userPhone = 41;
+  string setupTimeBegin = 42;
+  string setupTimeEnd = 43;
+  string warrantyTimeBegin = 44;
+  string warrantyTimeEnd = 45;
 }
 
 message NfcProductsReq {
@@ -3779,7 +3783,8 @@ message NfcProductAndBillReq {
 
 message ListNfcProductVoReq {
   NfcProductVo productVo = 1;
-  int64  managerId = 2;
+  Page   page = 2;
+  int64  managerId = 3;
 }
 
 message ListNfcProductResp {
@@ -3805,11 +3810,15 @@ message ListNfcProductDtoResp {
 message ListRegionVoReq {
   NfcRegion region = 1;
   string productCode = 2;
-  int64  managerId = 3;
+  Page   page = 3;
+  int64  managerId = 4;
 }
 
 message ListNfcRegionResp {
   repeated NfcRegion list = 1;
+  int64 total = 2;
+  int64 pageSize = 3;
+  int64 pageNumber = 4;
 }
 
 message NfcSmsReq {
@@ -3819,7 +3828,8 @@ message NfcSmsReq {
 
 message ListSmsReq {
   NfcSms sms = 1;
-  int64  managerId = 2;
+  Page   page = 2;
+  int64  managerId = 3;
 }
 
 message ListSmsResp {
@@ -3836,7 +3846,8 @@ message NfcUserReq {
 
 message ListUserReq {
   NfcUser user = 1;
-  int64  managerId = 2;
+  Page   page = 2;
+  int64  managerId = 3;
 }
 
 message ListUserResp {
