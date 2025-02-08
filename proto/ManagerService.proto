@@ -3857,6 +3857,12 @@ message ListUserResp {
   int64 pageNumber = 4;
 }
 
+message WithdrawUserReq {
+  string productCode = 1;
+  string userPhone = 2;
+  int64  managerId = 3;
+}
+
 service NfcService {
   rpc CreateNfcProducts(NfcProductsReq) returns (ResultResp);
   rpc UpdateNfcProduct(NfcProductReq) returns (ResultResp);
@@ -3872,4 +3878,5 @@ service NfcService {
   
   rpc CreateNfcUser(NfcUserReq) returns (ResultResp);
   rpc ListNfcUser(ListUserReq) returns (ListUserResp);
+  rpc WithdrawUser(WithdrawUserReq) returns (ResultResp);
 }
