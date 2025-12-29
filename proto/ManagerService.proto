@@ -3657,6 +3657,12 @@ message NfcProduct {
   string szsbCode = 38;
   string tcCode = 39;
   string zgCode = 40;
+  string kzbkCode = 41;
+  string fwdCode = 42;
+  string wbCode = 43;
+  string ykjstCode = 44;
+  string gdbCode = 45;
+  string zkCode = 46;
 }
 
 message NfcProductBill {
@@ -3757,6 +3763,12 @@ message NfcProductVo {
   string setupTimeEnd = 43;
   string warrantyTimeBegin = 44;
   string warrantyTimeEnd = 45;
+  string kzbkCode = 46;
+  string fwdCode = 47;
+  string wbCode = 48;
+  string ykjstCode = 49;
+  string gdbCode = 50;
+  string zkCode = 51;
 }
 
 message NfcProductsReq {
